@@ -11,6 +11,8 @@ function PatientInput() {
     scanFiles: []
   })
   const [dragActive, setDragActive] = useState(false)
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [analysisProgress, setAnalysisProgress] = useState(0)
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -57,28 +59,152 @@ function PatientInput() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     
-    // Here you'll send data to your teammate's backend
-    console.log('Submitting patient data:', formData)
+    console.log('🚀 Form submitted!')
+    console.log('Form validation:', {
+      hasName: !!formData.patientName,
+      hasAge: !!formData.age,
+      hasSymptoms: !!formData.symptoms,
+      hasScans: formData.scanFiles.length > 0
+    })
     
-    // For now, navigate to dashboard (you can add loading state here)
-    navigate('/dashboard')
+    if (!formData.patientName) {
+      alert('Please enter patient name')
+      return
+    }
+    
+    if (!formData.age) {
+      alert('Please enter patient age')
+      return
+    }
+    
+    if (!formData.symptoms) {
+      alert('Please enter symptoms')
+      return
+    }
+    
+    if (formData.scanFiles.length === 0) {
+      alert('Please upload a chest X-ray scan - this is required for AI analysis')
+      return
+    }
+    
+    console.log('✅ All validation passed, starting analysis...')
+    setIsAnalyzing(true)
+    setAnalysisProgress(10)
+    
+    try {
+      // Format medical history from simplified fields
+      let medicalHistory = ''
+      if (formData.conditionName && formData.conditionDuration) {
+        medicalHistory = `${formData.conditionName} (${formData.conditionDuration} years)`
+      } else if (formData.conditionName) {
+        medicalHistory = formData.conditionName
+      }
+      
+      // Prepare form data for backend API
+      const apiFormData = new FormData()
+      apiFormData.append('patient_name', formData.patientName)
+      apiFormData.append('patient_age', formData.age)
+      apiFormData.append('symptoms', formData.symptoms)
+      apiFormData.append('medical_history', medicalHistory)
+      apiFormData.append('scan', formData.scanFiles[0]) // Send first scan file
+      
+      setAnalysisProgress(30)
+      
+      // Call simplified backend API
+      console.log('🔄 Starting analysis for:', formData.patientName)
+      
+      const response = await fetch('http://localhost:8000/analyze', {
+        method: 'POST',
+        body: apiFormData,
+      })
+      
+      if (!response.ok) {
+        throw new Error(`API Error: ${response.status}`)
+      }
+      
+      setAnalysisProgress(80)
+      const analysisResult = await response.json()
+      
+      // Convert uploaded scan to base64 for storage
+      const scanFile = formData.scanFiles[0]
+      let scanImageData = null
+      
+      if (scanFile) {
+        try {
+          const reader = new FileReader()
+          scanImageData = await new Promise((resolve) => {
+            reader.onload = (e) => resolve(e.target.result)
+            reader.readAsDataURL(scanFile)
+          })
+        } catch (error) {
+          console.error('Error converting image to base64:', error)
+        }
+      }
+
+      // Add timestamp and scan image to the analysis result
+      const timestampedResult = {
+        ...analysisResult,
+        time_submitted: new Date().toISOString(),
+        submitted_at: new Date().toLocaleString(),
+        scan_image: scanImageData,
+        scan_filename: scanFile ? scanFile.name : null,
+        scan_size: scanFile ? scanFile.size : null
+      }
+      
+      // Store result in sessionStorage for dashboard access
+      sessionStorage.setItem('latestAnalysis', JSON.stringify(timestampedResult))
+      
+      // Add to existing cases in sessionStorage
+      const existingCases = JSON.parse(sessionStorage.getItem('allCases') || '[]')
+      existingCases.unshift(timestampedResult) // Add to beginning of array
+      sessionStorage.setItem('allCases', JSON.stringify(existingCases))
+      
+      setAnalysisProgress(100)
+      
+      // Navigate to case details page with the analysis
+      console.log('🎯 Navigating to case details with:', analysisResult.patient_id)
+      console.log('📦 Analysis result to pass:', analysisResult)
+      
+      navigate(`/case/${analysisResult.patient_id}`, { 
+        state: { analysisData: analysisResult }
+      })
+      
+    } catch (error) {
+      console.error('❌ Analysis failed:', error)
+      alert(`Analysis failed: ${error.message}\n\nTroubleshooting:\n1. Make sure the backend server is running\n2. Check your internet connection\n3. Verify the image file is valid`)
+      
+      // Don't navigate away on error - stay on the form
+      setAnalysisProgress(0)
+    } finally {
+      setIsAnalyzing(false)
+    }
   }
 
   return (
     <div className="patient-input">
       <div className="container">
-        <button 
-          onClick={() => navigate('/')} 
-          className="back-btn"
-        >
-          ← Back to Home
-        </button>
+        <div className="navigation-buttons">
+          <button 
+            onClick={() => navigate('/')} 
+            className="back-btn"
+          >
+            ← Back to Home
+          </button>
+          <button 
+            onClick={() => navigate('/dashboard')} 
+            className="back-btn dashboard-btn"
+          >
+            ← Dashboard
+          </button>
+        </div>
         
         <div className="page-header">
           <h2>New Patient Analysis</h2>
         </div>
         
         <form onSubmit={handleSubmit} className="patient-form">
+          
+
           
           {/* Two Column Layout */}
           <div className="form-columns">
@@ -96,7 +222,7 @@ function PatientInput() {
                     value={formData.patientName}
                     onChange={handleInputChange}
                     required
-                    placeholder="Enter patient's full name"
+                    placeholder="Enter full name"
                   />
                 </div>
                 <div className="form-group">
@@ -114,24 +240,56 @@ function PatientInput() {
                   />
                 </div>
               </div>
-              
+
               <div className="form-group">
-                <label htmlFor="symptoms">Symptoms & Chief Complaint *</label>
+                <label htmlFor="symptoms">Symptoms *</label>
                 <textarea
                   id="symptoms"
                   name="symptoms"
                   value={formData.symptoms}
                   onChange={handleInputChange}
                   required
-                  placeholder="Describe the patient's symptoms, complaints, and relevant medical history..."
+                  placeholder="Describe the patient's symptoms and reason for visit..."
                   rows="4"
                 />
+              </div>
+
+              {/* Medical History - Separate Box */}
+              <div className="medical-history-box">
+                <h4>📋 Medical History</h4>
+                <div className="history-fields">
+                  <div className="form-group compact">
+                    <label htmlFor="conditionName">Condition Name</label>
+                    <input
+                      type="text"
+                      id="conditionName"
+                      name="conditionName"
+                      value={formData.conditionName}
+                      onChange={handleInputChange}
+                      placeholder="e.g., Diabetes, Hypertension, Asthma..."
+                    />
+                  </div>
+                  <div className="form-group compact">
+                    <label htmlFor="conditionDuration">Years Affected</label>
+                    <input
+                      type="number"
+                      id="conditionDuration"
+                      name="conditionDuration"
+                      value={formData.conditionDuration}
+                      onChange={handleInputChange}
+                      placeholder="Years"
+                      min="0"
+                      max="100"
+                    />
+                  </div>
+                </div>
+                <small className="form-hint">Enter the most relevant condition for risk assessment</small>
               </div>
             </div>
 
             {/* Right Column: File Upload */}
             <div className="form-section form-column-right">
-            <h3>Medical Scans</h3>
+            <h3>Medical Scan *</h3>
             <div 
               className={`file-upload-area ${dragActive ? 'drag-active' : ''}`}
               onDragEnter={handleDrag}
@@ -141,8 +299,8 @@ function PatientInput() {
             >
               <div className="upload-content">
                 <div className="upload-icon">📁</div>
-                <p>Drag and drop medical scans here</p>
-                <p className="upload-subtext">or click to browse files</p>
+                <p>Drag and drop medical scans here *</p>
+                <p className="upload-subtext">or click to browse files (required)</p>
                 <input
                   type="file"
                   multiple
@@ -177,21 +335,35 @@ function PatientInput() {
           
           </div>
 
+          {/* Analysis Progress */}
+          {isAnalyzing && (
+            <div className="analysis-progress">
+              <div className="progress-header">
+                <h3>...</h3>
+                <span>{analysisProgress}%</span>
+              </div>
+              <div className="progress-bar">
+                <div 
+                  className="progress-fill" 
+                  style={{ width: `${analysisProgress}%` }}
+                ></div>
+              </div>
+              <p className="progress-text">
+                {analysisProgress < 30 && "Uploading scan and processing image..."}
+                {analysisProgress >= 30 && analysisProgress < 80 && "Running analysis on medical scan..."}
+                {analysisProgress >= 80 && "Generating diagnostic report..."}
+              </p>
+            </div>
+          )}
+
           {/* Submit Button */}
           <div className="form-actions">
             <button 
-              onClick={() => navigate('/dashboard')}
-              type="button" 
-              className="secondary-btn"
-            >
-              📊 View Dashboard
-            </button>
-            <button 
               type="submit" 
               className="submit-btn"
-              disabled={!formData.patientName || !formData.age || !formData.symptoms}
+              disabled={isAnalyzing || !formData.patientName || !formData.age || !formData.symptoms || formData.scanFiles.length === 0}
             >
-              🔍 Analyze with AI
+              {isAnalyzing ? '🔄 Analyzing...' : 'Submit'}
             </button>
           </div>
         </form>

@@ -1,5 +1,6 @@
 .env
 .venv
+jarvis_env
 images/
 # Logs
 logs

@@ -127,6 +127,18 @@
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(255, 255, 255, 0.95));
 }
 
+.stat-card.total {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.stat-card.average {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+}
+
+.stat-card.ai {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+}
+
 .stat-number {
   font-size: 2.5rem;
   font-weight: bold;
@@ -211,6 +223,22 @@
   border: 1px solid rgba(16, 185, 129, 0.1);
 }
 
+.case-card.real-analysis {
+  border-left: 4px solid #10b981;
+  background: linear-gradient(135deg, 
+    rgba(16, 185, 129, 0.05), 
+    rgba(16, 185, 129, 0.02)
+  );
+}
+
+.case-card.real-analysis::before {
+  content: '🤖';
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.2rem;
+}
+
 .case-header {
   display: flex;
   justify-content: space-between;
@@ -254,6 +282,19 @@
 .urgency-icon {
   font-size: 1.4rem;
   animation: pulse 2s ease-in-out infinite;
+}
+
+/* Different colored sirens using CSS filters */
+.urgency-icon.critical {
+  filter: hue-rotate(0deg) saturate(1.2); /* Red siren */
+}
+
+.urgency-icon.priority {
+  filter: hue-rotate(60deg) saturate(1.5) brightness(1.2); /* Yellow siren */
+}
+
+.urgency-icon.routine {
+  filter: hue-rotate(120deg) saturate(1.3) brightness(1.1); /* Green siren */
 }
 
 @keyframes pulse {
@@ -355,6 +396,278 @@
   background: linear-gradient(135deg, #2980b9, #21618c);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+}
+
+/* Server Status Indicator */
+.server-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-indicator.online {
+  background-color: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+}
+
+.status-indicator.offline {
+  background-color: #ef4444;
+}
+
+.status-indicator.unknown {
+  background-color: #f59e0b;
+}
+
+.pulse-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: #10b981;
+  animation: pulse-animation 2s infinite;
+  margin-left: 0.25rem;
+}
+
+@keyframes pulse-animation {
+  0% { opacity: 1; }
+  50% { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+
+/* Table Format for Concise Dashboard */
+.cases-table-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+.cases-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.cases-table thead {
+  background: linear-gradient(135deg, #1e293b, #334155);
+  color: white;
+}
+
+.cases-table th {
+  padding: 1rem 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #475569;
+}
+
+.cases-table tbody tr {
+  background: white;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.cases-table tbody tr:hover {
+  background: #f8fafc;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cases-table tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+.cases-table tbody tr:nth-child(even):hover {
+  background: #f1f5f9;
+}
+
+.cases-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #e2e8f0;
+  vertical-align: middle;
+}
+
+/* Priority Column */
+.priority-cell {
+  width: 60px;
+  text-align: center;
+}
+
+.urgency-icon {
+  font-size: 1.2rem;
+  display: inline-block;
+}
+
+/* Patient Column */
+.patient-cell {
+  width: 140px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+/* Age Column */
+.age-cell {
+  width: 60px;
+  text-align: center;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* Symptoms Column */
+.symptoms-cell {
+  width: 300px;
+}
+
+.symptoms-text {
+  color: #475569;
+  line-height: 1.4;
+  display: block;
+}
+
+/* Time Column */
+.time-cell {
+  width: 100px;
+  color: #6b7280;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* Score Column */
+.score-cell {
+  width: 80px;
+  text-align: center;
+}
+
+.score-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: white;
+}
+
+.score-badge.critical {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+}
+
+.score-badge.priority {
+  background: linear-gradient(135deg, #eab308, #ca8a04);
+}
+
+.score-badge.routine {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+/* Action Column */
+.action-cell {
+  width: 140px;
+  text-align: center;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.view-btn {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border: none;
+  padding: 0.35rem 0.7rem;
+  border-radius: 5px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.view-btn:hover {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.treat-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: none;
+  padding: 0.35rem 0.7rem;
+  border-radius: 5px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.treat-btn:hover {
+  background: linear-gradient(135deg, #059669, #047857);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Row Border Colors */
+.case-row.critical {
+  border-left: 4px solid #dc2626 !important;
+}
+
+.case-row.priority {
+  border-left: 4px solid #eab308 !important;
+}
+
+.case-row.routine {
+  border-left: 4px solid #10b981 !important;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .cases-table {
+    font-size: 0.8rem;
+  }
+  
+  .cases-table th,
+  .cases-table td {
+    padding: 0.6rem 0.5rem;
+  }
+  
+  .symptoms-cell {
+    width: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .cases-table-container {
+    overflow-x: auto;
+  }
+  
+  .cases-table {
+    min-width: 900px;
+    font-size: 0.75rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .view-btn,
+  .treat-btn {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.7rem;
+  }
 }
 
 /* Responsive */

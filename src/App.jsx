@@ -3,6 +3,7 @@ import Homepage from './components/Homepage'
 import PatientInput from './components/PatientInput'
 import Dashboard from './components/Dashboard'
 import CaseDetails from './components/CaseDetails'
+import logo from './assets/logo.png'
 import './App.css'
 
 function AppContent() {
@@ -13,7 +14,10 @@ function AppContent() {
     <div className="app">
       {!isHomepage && (
         <header className="app-header">
-          <h1>🏥 JarvisMD - AI Emergency Analysis</h1>
+          <h1>
+            <img src={logo} alt="JarvisMD Logo" className="header-logo" />
+            JarvisMD
+          </h1>
         </header>
       )}
       

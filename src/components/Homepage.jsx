@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
+import logo from '../assets/logo.png'
 import './Homepage.css'
 
 function Homepage() {
@@ -33,11 +34,8 @@ function Homepage() {
       <header className="top-header">
         <div className="header-content">
           <div className="brand">
-            <span className="logo-icon">🩺</span>
+            <img src={logo} alt="JarvisMD Logo" className="logo-icon" />
             <span className="brand-name">JarvisMD</span>
-          </div>
-          <div className="header-badge">
-            <span className="ai-indicator">🤖 AI-Powered</span>
           </div>
         </div>
       </header>

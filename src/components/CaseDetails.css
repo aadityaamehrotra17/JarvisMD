@@ -40,12 +40,44 @@
 
 .patient-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   background: white;
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 600px;
+  margin: 0 auto 0 20%;
+}
+
+.urgency-indicator-separate {
+  text-align: center;
+  padding: 1.5rem;
+  border-radius: 12px;
+  min-width: 120px;
+  max-width: 200px;
+  margin: 1rem 0;
+}
+
+.urgency-indicator-separate.critical {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+}
+
+.urgency-indicator-separate.priority {
+  background: linear-gradient(135deg, #eab308, #ca8a04);
+  color: white;
+  box-shadow: 0 8px 25px rgba(234, 179, 8, 0.3);
+}
+
+.urgency-indicator-separate.routine {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
 }
 
 .patient-info h1 {
@@ -61,6 +93,14 @@
   font-size: 1.1rem;
 }
 
+.patient-id {
+  color: #6b7280;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-top: 0.25rem;
+  letter-spacing: 0.05em;
+}
+
 .urgency-indicator {
   text-align: center;
   padding: 1rem;
@@ -74,19 +114,13 @@
   box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
 }
 
-.urgency-indicator.high {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  color: white;
-  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
-}
-
-.urgency-indicator.moderate {
+.urgency-indicator.priority {
   background: linear-gradient(135deg, #eab308, #ca8a04);
   color: white;
   box-shadow: 0 8px 25px rgba(234, 179, 8, 0.3);
 }
 
-.urgency-indicator.low {
+.urgency-indicator.routine {
   background: linear-gradient(135deg, #10b981, #059669);
   color: white;
   box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
@@ -106,12 +140,16 @@
 
 .content-grid {
   display: grid;
-  grid-template-columns: 1fr 400px;
-  gap: 2rem;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
 }
 
 .section {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.section.compact {
+  margin-bottom: 1rem;
 }
 
 .section h2 {
@@ -121,6 +159,16 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.section h3 {
+  color: #2c3e50;
+  margin-bottom: 0.75rem;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
 }
 
 .content-card {
@@ -139,6 +187,200 @@
 .content-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+.content-card.small {
+  padding: 1rem;
+  margin-bottom: 0;
+}
+
+/* Clinical Summary Styles */
+.clinical-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.summary-item {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.summary-item strong {
+  color: #2c3e50;
+  min-width: 100px;
+  font-weight: 600;
+}
+
+/* Risk Assessment Styling */
+.risk-assessment-item {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.risk-assessment-content {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.risk-level-badge-inline {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.risk-level-badge-inline.high,
+.risk-level-badge-inline.critical {
+  background: #ef4444;
+  color: white;
+}
+
+.risk-level-badge-inline.moderate,
+.risk-level-badge-inline.priority {
+  background: #f59e0b;
+  color: white;
+}
+
+.risk-level-badge-inline.low,
+.risk-level-badge-inline.routine {
+  background: #10b981;
+  color: white;
+}
+
+.risk-description {
+  color: #374151;
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+
+
+/* Compact Pathology Display */
+.pathology-compact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pathology-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.pathology-row:last-child {
+  border-bottom: none;
+}
+
+.pathology-name {
+  font-weight: 500;
+  color: #374151;
+  flex: 1;
+}
+
+.pathology-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 80px;
+}
+
+.pathology-mini-bar {
+  width: 40px;
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.pathology-mini-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.pathology-percent {
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.875rem;
+  min-width: 35px;
+  text-align: right;
+}
+
+.no-findings {
+  color: #6b7280;
+  font-style: italic;
+  padding: 1rem;
+  text-align: center;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+/* Urgency Assessment Compact */
+.urgency-details {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.urgency-score-large {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+.score-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.score-max {
+  font-size: 1.2rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.urgency-text {
+  flex: 1;
+}
+
+.urgency-level {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+  display: inline-block;
+}
+
+.urgency-level.critical {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+}
+
+.urgency-level.priority {
+  background: linear-gradient(135deg, #eab308, #ca8a04);
+  color: white;
+}
+
+.urgency-level.routine {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+}
+
+.urgency-reasoning {
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.4;
 }
 
 /* Scan Analysis */
@@ -350,14 +592,271 @@
   line-height: 1.4;
 }
 
+/* Pathology Results */
+.pathology-results {
+  margin: 1rem 0;
+}
+
+.pathology-item {
+  margin-bottom: 1rem;
+}
+
+.pathology-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.pathology-name {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 0.95rem;
+}
+
+.pathology-score {
+  font-weight: 700;
+  color: #475569;
+  font-size: 0.9rem;
+}
+
+.pathology-bar {
+  width: 100%;
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.pathology-fill {
+  height: 100%;
+  transition: width 0.3s ease;
+  border-radius: 4px;
+}
+
+.structured-report {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(29, 78, 216, 0.02));
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  border-radius: 12px;
+}
+
+.structured-report h4 {
+  color: #1e293b;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.structured-report p {
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
+  color: #374151;
+}
+
+.structured-report strong {
+  color: #1e293b;
+}
+
+.triage-priority {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: 0.25rem;
+}
+
+.urgency-indicator.critical .triage-priority,
+.urgency-indicator.priority .triage-priority,
+.urgency-indicator.routine .triage-priority {
+  display: block;
+}
+
+/* Medical Scan Display */
+.scan-display {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.medical-scan-image {
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.medical-scan-image:hover {
+  border-color: #3b82f6;
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.scan-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-top: 1px solid #f1f5f9;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.scan-enlarge-hint {
+  color: #3b82f6;
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
+.no-scan {
+  color: #6b7280;
+  font-style: italic;
+  padding: 2rem;
+  text-align: center;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 2px dashed #d1d5db;
+}
+
+/* Image Modal Styles */
+.image-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2rem;
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+.image-modal-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+.image-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  z-index: 1001;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-modal-close:hover {
+  background: rgba(0, 0, 0, 0.9);
+  transform: scale(1.1);
+}
+
+.image-modal-img {
+  width: 100%;
+  height: auto;
+  max-height: calc(90vh - 100px);
+  object-fit: contain;
+  display: block;
+}
+
+.image-modal-info {
+  background: #f8fafc;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #e2e8f0;
+}
+
+.modal-filename {
+  font-weight: 600;
+  color: #374151;
+}
+
+.modal-patient {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+/* Modal Animations */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Responsive Modal */
+@media (max-width: 768px) {
+  .image-modal-overlay {
+    padding: 1rem;
+  }
+  
+  .image-modal-content {
+    max-width: 95vw;
+    max-height: 95vh;
+  }
+  
+  .image-modal-info {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+  
+  .image-modal-close {
+    width: 35px;
+    height: 35px;
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   .content-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
   
-  .right-column {
-    order: -1;
+  .urgency-details {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
   }
 }
 
@@ -370,6 +869,7 @@
     flex-direction: column;
     gap: 1rem;
     text-align: center;
+    padding: 1.5rem;
   }
   
   .patient-info h1 {
@@ -378,23 +878,42 @@
   
   .patient-meta {
     justify-content: center;
+    flex-wrap: wrap;
   }
   
-  .history-grid {
-    grid-template-columns: 1fr;
+  .content-grid {
+    gap: 0.75rem;
   }
   
-  .risk-metric {
-    grid-template-columns: 1fr;
+  .section {
+    margin-bottom: 0.75rem;
+  }
+  
+  .section.compact {
+    margin-bottom: 0.5rem;
+  }
+  
+  .pathology-row {
+    flex-wrap: wrap;
     gap: 0.5rem;
   }
   
-  .metric-bar {
-    order: 2;
+  .pathology-right {
+    min-width: 70px;
   }
   
-  .metric-value {
-    order: 1;
-    text-align: left;
+  .urgency-details {
+    text-align: center;
+    align-items: center;
+  }
+  
+  .medical-scan-image {
+    max-height: 250px;
+  }
+  
+  .scan-info {
+    flex-direction: column;
+    gap: 0.25rem;
+    align-items: flex-start;
   }
 }

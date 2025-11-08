@@ -49,6 +49,18 @@
   letter-spacing: -0.01em;
   position: relative;
   z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.header-logo {
+  width: 2.5rem;
+  height: 2.5rem;
+  opacity: 0.9;
+  object-fit: contain;
+  background: transparent;
 }
 
 .app-main {

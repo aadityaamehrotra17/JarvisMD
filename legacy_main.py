@@ -65,15 +65,15 @@ def generate_llm_report(findings_input: dict) -> str:
     """Use Gemini LLM to produce structured findings report."""
     client = genai.Client()
     prompt = f"""
-    You are a junior radiologist reviewing a chest X-ray. The AI model produced the following predicted probabilities for pathologies:
+    You are a radiologist reviewing a chest X-ray. Based on the following clinical findings and probability assessments:
     {findings_input}
 
     Please generate a structured report in JSON format with the following fields:
-    1. 'findings_summary': A short natural-language summary of abnormalities.
-    2. 'preliminary_impression': Likely conditions or clinical interpretation.
-    3. 'recommendation': Suggested urgency or follow-up.
+    1. 'findings_summary': A concise clinical summary of significant abnormalities detected.
+    2. 'preliminary_impression': Most likely diagnostic considerations based on imaging findings.
+    3. 'recommendation': Clinical recommendations for follow-up or treatment urgency.
 
-    Use clear, clinical language, and prioritize significant findings.
+    Write in professional medical terminology without referencing AI models or automated systems. Focus only on clinical observations and medical interpretations.
     """
     response = client.models.generate_content(
         model="gemini-2.5-flash",
