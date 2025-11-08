@@ -1,6 +1,6 @@
 """
 AI Junior-Doctor Pipeline: Chest X-ray Analysis using CheXpert + Gemini LLM
-End-to-end CPU pipeline
+Modular functions for FastAPI integration
 """
 
 # ------------------------------
@@ -8,16 +8,11 @@ End-to-end CPU pipeline
 # ------------------------------
 import os
 from dotenv import load_dotenv
-from urllib.request import urlretrieve
-
 import numpy as np
 from PIL import Image
-import matplotlib.pyplot as plt
-
 import torch
 import torch.nn.functional as F
 import torchxrayvision as xrv
-
 from google import genai
 
 # ------------------------------
@@ -27,22 +22,11 @@ load_dotenv()
 API_KEY = os.getenv("GOOGLE_API_KEY")
 if API_KEY is None:
     raise ValueError("Please set GOOGLE_API_KEY in your .env file")
-
 os.environ["GOOGLE_API_KEY"] = API_KEY
 
 # ------------------------------
 # Functions
 # ------------------------------
-def download_image(url: str, save_path: str) -> Image.Image:
-    """Download an image if not already present and return PIL image."""
-    if not os.path.exists(save_path):
-        print(f"Downloading image from {url}...")
-        urlretrieve(url, save_path)
-    else:
-        print(f"Image already exists at {save_path}.")
-    return Image.open(save_path).convert("L")
-
-
 def preprocess_image(img: Image.Image) -> torch.Tensor:
     """Normalize and convert PIL image to tensor [1,1,224,224]."""
     img_np = np.array(img)
@@ -51,7 +35,6 @@ def preprocess_image(img: Image.Image) -> torch.Tensor:
     img_tensor = F.interpolate(img_tensor, size=(224, 224), mode='bilinear', align_corners=False)
     return img_tensor
 
-
 def run_chexpert_inference(img_tensor: torch.Tensor) -> tuple:
     """Run CheXpert DenseNet model and return pathologies + predictions."""
     model = xrv.models.DenseNet(weights="chex")
@@ -59,7 +42,6 @@ def run_chexpert_inference(img_tensor: torch.Tensor) -> tuple:
     with torch.no_grad():
         preds = model(img_tensor)[0]
     return model.pathologies, preds
-
 
 def generate_llm_report(findings_input: dict) -> str:
     """Use Gemini LLM to produce structured findings report."""
@@ -81,7 +63,6 @@ def generate_llm_report(findings_input: dict) -> str:
     )
     return response.text
 
-
 def compute_urgency_score(pathologies: list, preds: torch.Tensor) -> float:
     """Compute weighted numeric urgency score."""
     severity_weights = {
@@ -99,7 +80,6 @@ def compute_urgency_score(pathologies: list, preds: torch.Tensor) -> float:
         if label in severity_weights
     )
     return min(10, score / 2)  # normalize roughly to 0–10 scale
-
 
 def generate_urgency_label(findings_input: dict, urgency_score: float) -> str:
     """Use Gemini LLM to generate a human-readable urgency label."""
@@ -119,47 +99,3 @@ def generate_urgency_label(findings_input: dict, urgency_score: float) -> str:
         contents=prompt,
     )
     return response.text
-
-
-# ------------------------------
-# Main Execution
-# ------------------------------
-def main():
-    # Step 1: Load local image
-    img_path = "image.jpeg"  # make sure this file exists in the same directory
-    if not os.path.exists(img_path):
-        raise FileNotFoundError(f"{img_path} not found. Please place the image in the working directory.")
-    img = Image.open(img_path).convert("L")
-
-
-    # Optional: Display the image
-    plt.imshow(np.array(img), cmap="gray")
-    plt.axis("off")
-    plt.title("Sample Chest X-ray Input")
-    plt.show()
-
-    # Step 2: Preprocess Image
-    img_tensor = preprocess_image(img)
-
-    # Step 3: CheXpert Inference
-    pathologies, preds = run_chexpert_inference(img_tensor)
-    print("🩺 Predicted CheXpert findings:")
-    for pathology, prob in zip(pathologies, preds):
-        print(f"{pathology:20s}: {prob.item():.3f}")
-
-    # Step 4: LLM Reasoning
-    findings_input = {pathology: float(prob.item()) for pathology, prob in zip(pathologies, preds)}
-    llm_report = generate_llm_report(findings_input)
-    print("\n📝 LLM-Based Structured Report:\n", llm_report)
-
-    # Step 5: Urgency Scoring
-    urgency_score = compute_urgency_score(pathologies, preds)
-    print(f"\n🔢 Raw Urgency Score (0–10): {urgency_score:.1f}")
-
-    urgency_label = generate_urgency_label(findings_input, urgency_score)
-    print("\n🚦 Final Urgency Assessment (via Gemini LLM):")
-    print(urgency_label)
-
-
-if __name__ == "__main__":
-    main()
