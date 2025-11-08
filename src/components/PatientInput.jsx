@@ -76,59 +76,61 @@ function PatientInput() {
         
         <div className="page-header">
           <h2>New Patient Analysis</h2>
-          <p className="subtitle">Upload medical scans and enter patient information for AI analysis</p>
         </div>
         
         <form onSubmit={handleSubmit} className="patient-form">
           
-          {/* Patient Information */}
-          <div className="form-section">
-            <h3>Patient Information</h3>
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="patientName">Patient Name *</label>
-                <input
-                  type="text"
-                  id="patientName"
-                  name="patientName"
-                  value={formData.patientName}
-                  onChange={handleInputChange}
-                  required
-                  placeholder="Enter patient's full name"
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="age">Age *</label>
-                <input
-                  type="number"
-                  id="age"
-                  name="age"
-                  value={formData.age}
-                  onChange={handleInputChange}
-                  required
-                  placeholder="Age"
-                  min="0"
-                  max="150"
-                />
-              </div>
-            </div>
+          {/* Two Column Layout */}
+          <div className="form-columns">
             
-            <div className="form-group">
-              <label htmlFor="symptoms">Symptoms & Chief Complaint *</label>
-              <textarea
-                id="symptoms"
-                name="symptoms"
-                value={formData.symptoms}
-                onChange={handleInputChange}
-                required
-                placeholder="Describe the patient's symptoms, complaints, and relevant medical history..."
-                rows="4"
-              />
+            {/* Left Column: Patient Information */}
+            <div className="form-section form-column-left">
+              <h3>Patient Information</h3>
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="patientName">Patient Name *</label>
+                  <input
+                    type="text"
+                    id="patientName"
+                    name="patientName"
+                    value={formData.patientName}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="Enter patient's full name"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="age">Age *</label>
+                  <input
+                    type="number"
+                    id="age"
+                    name="age"
+                    value={formData.age}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="Age"
+                    min="0"
+                    max="150"
+                  />
+                </div>
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="symptoms">Symptoms & Chief Complaint *</label>
+                <textarea
+                  id="symptoms"
+                  name="symptoms"
+                  value={formData.symptoms}
+                  onChange={handleInputChange}
+                  required
+                  placeholder="Describe the patient's symptoms, complaints, and relevant medical history..."
+                  rows="4"
+                />
+              </div>
             </div>
-          </div>
 
-          {/* File Upload */}
-          <div className="form-section">
+            {/* Right Column: File Upload */}
+            <div className="form-section form-column-right">
             <h3>Medical Scans</h3>
             <div 
               className={`file-upload-area ${dragActive ? 'drag-active' : ''}`}
@@ -171,6 +173,8 @@ function PatientInput() {
                 </div>
               </div>
             )}
+          </div>
+          
           </div>
 
           {/* Submit Button */}
