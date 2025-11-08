@@ -125,10 +125,12 @@ def generate_urgency_label(findings_input: dict, urgency_score: float) -> str:
 # Main Execution
 # ------------------------------
 def main():
-    # Step 1: Load Image
-    sample_url = "https://raw.githubusercontent.com/ieee8023/covid-chestxray-dataset/master/images/1-s2.0-S0140673620303706-fx1_lrg.jpg"
-    img_path = "sample_cxr.jpg"
-    img = download_image(sample_url, img_path)
+    # Step 1: Load local image
+    img_path = "image.jpeg"  # make sure this file exists in the same directory
+    if not os.path.exists(img_path):
+        raise FileNotFoundError(f"{img_path} not found. Please place the image in the working directory.")
+    img = Image.open(img_path).convert("L")
+
 
     # Optional: Display the image
     plt.imshow(np.array(img), cmap="gray")

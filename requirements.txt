@@ -5,4 +5,4 @@ numpy
 pillow
 matplotlib
 python-dotenv
-google-generativeai
+google-genai
