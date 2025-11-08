@@ -1,0 +1,11 @@
+torch>=2.0.0
+torchvision
+torchxrayvision
+numpy
+pillow
+matplotlib
+python-dotenv
+google-genai
+fastapi
+uvicorn
+python-multipart
