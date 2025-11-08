@@ -86,6 +86,13 @@ function Dashboard() {
 
   return (
     <div className="dashboard">
+      <button 
+        onClick={() => navigate('/')} 
+        className="back-btn"
+      >
+        ← Back to Home
+      </button>
+      
       <div className="dashboard-header">
         <div className="header-content">
           <h2>Emergency Room Dashboard</h2>

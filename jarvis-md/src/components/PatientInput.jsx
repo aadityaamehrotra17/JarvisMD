@@ -67,8 +67,17 @@ function PatientInput() {
   return (
     <div className="patient-input">
       <div className="container">
-        <h2>New Patient Analysis</h2>
-        <p className="subtitle">Upload medical scans and enter patient information for AI analysis</p>
+        <button 
+          onClick={() => navigate('/')} 
+          className="back-btn"
+        >
+          ← Back to Home
+        </button>
+        
+        <div className="page-header">
+          <h2>New Patient Analysis</h2>
+          <p className="subtitle">Upload medical scans and enter patient information for AI analysis</p>
+        </div>
         
         <form onSubmit={handleSubmit} className="patient-form">
           
@@ -166,6 +175,13 @@ function PatientInput() {
 
           {/* Submit Button */}
           <div className="form-actions">
+            <button 
+              onClick={() => navigate('/dashboard')}
+              type="button" 
+              className="secondary-btn"
+            >
+              📊 View Dashboard
+            </button>
             <button 
               type="submit" 
               className="submit-btn"

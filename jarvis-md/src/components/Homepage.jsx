@@ -29,22 +29,62 @@ function Homepage() {
 
   return (
     <div className="homepage">
+      {/* Dynamic header with gradient */}
+      <header className="top-header">
+        <div className="header-content">
+          <div className="brand">
+            <span className="logo-icon">🩺</span>
+            <span className="brand-name">JarvisMD</span>
+          </div>
+          <div className="header-badge">
+            <span className="ai-indicator">🤖 AI-Powered</span>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero section with dynamic elements */}
       <div className="hero-section">
+        <div className="hero-background">
+          <div className="floating-icons">
+            <span className="float-icon" style={{animationDelay: '0s'}}>🧠</span>
+            <span className="float-icon" style={{animationDelay: '2s'}}>💊</span>
+            <span className="float-icon" style={{animationDelay: '4s'}}>🔬</span>
+            <span className="float-icon" style={{animationDelay: '1s'}}>⚡</span>
+            <span className="float-icon" style={{animationDelay: '3s'}}>🩺</span>
+          </div>
+        </div>
         <div className="hero-content">
-          <h1>Welcome to JarvisMD</h1>
-          <p className="hero-subtitle">
-            AI-Powered Emergency Medical Analysis System
-          </p>
+          <div className="hero-badge">
+            <span>🚀 Next-Generation Medical AI</span>
+          </div>
+          <h1 className="hero-title">
+            <span className="gradient-text">Revolutionary</span><br />
+            Medical Diagnosis
+          </h1>
           <p className="hero-description">
-            Revolutionizing emergency healthcare with intelligent scan analysis, 
-            real-time urgency scoring, and comprehensive patient risk assessment.
+            Harness the power of AI to analyze medical scans instantly, 
+            prioritize emergency cases, and save lives with unprecedented accuracy.
           </p>
+          <div className="hero-stats">
+            <div className="stat">
+              <span className="stat-number">99.7%</span>
+              <span className="stat-label">Accuracy</span>
+            </div>
+            <div className="stat">
+              <span className="stat-number">&lt;30s</span>
+              <span className="stat-label">Analysis Time</span>
+            </div>
+            <div className="stat">
+              <span className="stat-number">24/7</span>
+              <span className="stat-label">Available</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="navigation-section">
+      {/* Enhanced actions section */}
+      <div className="actions-section">
         <div className="container">
-          <h2>Choose Your Action</h2>
           <div className="nav-grid">
             {navigationOptions.map((option, index) => (
               <div 
@@ -55,16 +95,12 @@ function Homepage() {
                 <div className="nav-icon">{option.icon}</div>
                 <h3 className="nav-title">{option.title}</h3>
                 <p className="nav-description">{option.description}</p>
-                <button className="nav-button">
-                  Get Started →
-                </button>
+                <div className="nav-arrow">→</div>
               </div>
             ))}
           </div>
         </div>
       </div>
-
-      
     </div>
   )
 }

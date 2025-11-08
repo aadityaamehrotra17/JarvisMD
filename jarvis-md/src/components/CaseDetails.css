@@ -2,7 +2,7 @@
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
-  background: #f8f9fa;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
   min-height: 100vh;
 }
 
@@ -69,23 +69,27 @@
 }
 
 .urgency-indicator.critical {
-  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  background: linear-gradient(135deg, #ef4444, #dc2626);
   color: white;
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
 }
 
 .urgency-indicator.high {
-  background: linear-gradient(135deg, #f39c12, #d68910);
+  background: linear-gradient(135deg, #f59e0b, #d97706);
   color: white;
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
 }
 
 .urgency-indicator.moderate {
-  background: linear-gradient(135deg, #f1c40f, #d4ac0d);
-  color: #2c3e50;
+  background: linear-gradient(135deg, #eab308, #ca8a04);
+  color: white;
+  box-shadow: 0 8px 25px rgba(234, 179, 8, 0.3);
 }
 
 .urgency-indicator.low {
-  background: linear-gradient(135deg, #27ae60, #229954);
+  background: linear-gradient(135deg, #10b981, #059669);
   color: white;
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
 }
 
 .urgency-score {
@@ -120,10 +124,21 @@
 }
 
 .content-card {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.content-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
 }
 
 /* Scan Analysis */
