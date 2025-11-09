@@ -63,20 +63,7 @@ function Homepage() {
             Harness the power of AI to analyze medical scans instantly, 
             prioritize emergency cases, and save lives with unprecedented accuracy.
           </p>
-          <div className="hero-stats">
-            <div className="stat">
-              <span className="stat-number">99.7%</span>
-              <span className="stat-label">Accuracy</span>
-            </div>
-            <div className="stat">
-              <span className="stat-number">&lt;30s</span>
-              <span className="stat-label">Analysis Time</span>
-            </div>
-            <div className="stat">
-              <span className="stat-number">24/7</span>
-              <span className="stat-label">Available</span>
-            </div>
-          </div>
+
         </div>
       </div>
 

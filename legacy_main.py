@@ -18,7 +18,7 @@ import torch
 import torch.nn.functional as F
 import torchxrayvision as xrv
 
-from google import genai
+import google.generativeai as genai
 
 # ------------------------------
 # Load API Key
@@ -63,7 +63,8 @@ def run_chexpert_inference(img_tensor: torch.Tensor) -> tuple:
 
 def generate_llm_report(findings_input: dict) -> str:
     """Use Gemini LLM to produce structured findings report."""
-    client = genai.Client()
+    genai.configure(api_key=API_KEY)
+    model = genai.GenerativeModel("gemini-2.0-flash-exp")
     prompt = f"""
     You are a radiologist reviewing a chest X-ray. Based on the following clinical findings and probability assessments:
     {findings_input}
@@ -75,10 +76,7 @@ def generate_llm_report(findings_input: dict) -> str:
 
     Write in professional medical terminology without referencing AI models or automated systems. Focus only on clinical observations and medical interpretations.
     """
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=prompt,
-    )
+    response = model.generate_content(prompt)
     return response.text
 
 
@@ -103,7 +101,8 @@ def compute_urgency_score(pathologies: list, preds: torch.Tensor) -> float:
 
 def generate_urgency_label(findings_input: dict, urgency_score: float) -> str:
     """Use Gemini LLM to generate a human-readable urgency label."""
-    client = genai.Client()
+    genai.configure(api_key=API_KEY)
+    model = genai.GenerativeModel("gemini-2.0-flash-exp")
     prompt = f"""
     You are a junior radiologist triaging a patient. The AI model predicted the following probabilities for pathologies:
     {findings_input}
@@ -114,10 +113,7 @@ def generate_urgency_label(findings_input: dict, urgency_score: float) -> str:
     - One of the labels: 'ROUTINE', 'MODERATE', 'CRITICAL'
     - A short explanation of your reasoning
     """
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=prompt,
-    )
+    response = model.generate_content(prompt)
     return response.text
 
 

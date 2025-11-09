@@ -20,10 +20,14 @@ function AnnotatedImageContainer({
     const updateImageDimensions = () => {
       if (imageRef.current) {
         const img = imageRef.current
-        setImageDimensions({
-          width: img.offsetWidth,
-          height: img.offsetHeight
-        })
+        // Use a small delay to ensure the image has fully rendered
+        setTimeout(() => {
+          const newDimensions = {
+            width: img.offsetWidth,
+            height: img.offsetHeight
+          }
+          setImageDimensions(newDimensions)
+        }, 50)
       }
     }
 
@@ -43,16 +47,22 @@ function AnnotatedImageContainer({
       return { display: 'none' }
     }
 
-    // Calculate scale factors based on actual image dimensions vs scan dimensions
-    const scaleX = imageDimensions.width / (scanDimensions.width || imageDimensions.width)
-    const scaleY = imageDimensions.height / (scanDimensions.height || imageDimensions.height)
+    // Use percentage-based positioning for consistency
+    const originalWidth = scanDimensions.width || 224
+    const originalHeight = scanDimensions.height || 224
+    
+    // Convert pixel coordinates to percentages
+    const leftPercent = (box.x / originalWidth) * 100
+    const topPercent = (box.y / originalHeight) * 100
+    const widthPercent = (box.width / originalWidth) * 100
+    const heightPercent = (box.height / originalHeight) * 100
 
     return {
       position: 'absolute',
-      left: `${(box.x * scaleX)}px`,
-      top: `${(box.y * scaleY)}px`,
-      width: `${box.width * scaleX}px`,
-      height: `${box.height * scaleY}px`,
+      left: `${leftPercent}%`,
+      top: `${topPercent}%`,
+      width: `${widthPercent}%`,
+      height: `${heightPercent}%`,
     }
   }
 
@@ -163,20 +173,7 @@ function AnnotatedScanViewer({ scanImage, boundingBoxes = [], scanDimensions = {
     }
   }, [isImageModalOpen])
 
-  const calculateBoxPosition = (box) => {
-    if (!containerDimensions.width || !scanDimensions.width) return null
 
-    // Calculate scale factors
-    const scaleX = containerDimensions.width / scanDimensions.width
-    const scaleY = containerDimensions.height / scanDimensions.height
-
-    return {
-      left: box.x * scaleX,
-      top: box.y * scaleY,
-      width: box.width * scaleX,
-      height: box.height * scaleY
-    }
-  }
 
   const getSeverityClass = (severity) => {
     switch (severity?.toUpperCase()) {

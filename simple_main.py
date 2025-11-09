@@ -71,7 +71,8 @@ def run_chexpert_inference(img_tensor: torch.Tensor) -> tuple:
 
 def generate_llm_report(findings_input: dict, patient_age: int = None, symptoms: str = "", medical_history: str = "") -> str:
     """Use Gemini LLM to produce structured findings report."""
-    client = genai.Client()
+    genai.configure(api_key=API_KEY)
+    model = genai.GenerativeModel("gemini-2.0-flash-exp")
     
     # Build context information
     clinical_context = f"Patient Age: {patient_age}\nSymptoms: {symptoms}"
@@ -93,10 +94,7 @@ def generate_llm_report(findings_input: dict, patient_age: int = None, symptoms:
 
     Write in professional medical terminology without referencing AI models or automated systems. Focus only on clinical observations and medical interpretations.
     """
-    response = client.models.generate_content(
-        model="gemini-2.0-flash-exp",
-        contents=prompt,
-    )
+    response = model.generate_content(prompt)
     return response.text
 
 def generate_bounding_boxes(findings_input: dict, img_width: int = 224, img_height: int = 224) -> list:
@@ -178,7 +176,8 @@ def generate_medical_history_risk_assessment(medical_history: str, findings_inpu
             "impact_on_condition": "Unable to assess medical history impact without patient information."
         })
     
-    client = genai.Client()
+    genai.configure(api_key=API_KEY)
+    model = genai.GenerativeModel("gemini-2.0-flash-exp")
     prompt = f"""
     You are an emergency physician evaluating how a patient's medical history affects their current condition.
 
@@ -195,10 +194,7 @@ def generate_medical_history_risk_assessment(medical_history: str, findings_inpu
 
     Focus specifically on how the past medical conditions, medications, or family history relate to the current chest X-ray findings and symptoms.
     """
-    response = client.models.generate_content(
-        model="gemini-2.0-flash-exp",
-        contents=prompt,
-    )
+    response = model.generate_content(prompt)
     return response.text
 
 def compute_urgency_score(pathologies: list, preds: torch.Tensor) -> float:
@@ -221,7 +217,8 @@ def compute_urgency_score(pathologies: list, preds: torch.Tensor) -> float:
 
 def generate_urgency_label(findings_input: dict, urgency_score: float, patient_age: int = None, symptoms: str = "", medical_history: str = "") -> str:
     """Use Gemini LLM to generate a human-readable urgency label."""
-    client = genai.Client()
+    genai.configure(api_key=API_KEY)
+    model = genai.GenerativeModel("gemini-2.0-flash-exp")
     
     # Build clinical context
     clinical_context = f"Patient Age: {patient_age}\nSymptoms: {symptoms}"
@@ -243,10 +240,7 @@ def generate_urgency_label(findings_input: dict, urgency_score: float, patient_a
 
     Use medical terminology appropriate for emergency department triage.
     """
-    response = client.models.generate_content(
-        model="gemini-2.0-flash-exp",
-        contents=prompt,
-    )
+    response = model.generate_content(prompt)
     return response.text
 
 # API Endpoints
