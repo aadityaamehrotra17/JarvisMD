@@ -15,7 +15,7 @@ import torch
 import torch.nn.functional as F
 import torchxrayvision as xrv
 from dotenv import load_dotenv
-import google.generativeai as genai
+from google import genai
 import asyncio
 
 # Load environment variables
