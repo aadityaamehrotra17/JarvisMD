@@ -363,10 +363,16 @@ async def analyze_scan(
         
         # Run the enhanced multi-agent workflow with progress tracking
         try:
+            # Convert any Tensor objects to float for JSON serialization
+            findings_for_agents = {
+                k: float(v) if hasattr(v, 'item') else v 
+                for k, v in findings_input.items()
+            }
+            
             agent_workflow_result = await multi_agent_workflow.process_case_with_progress(
                 patient_info_for_agents,
                 symptoms,
-                findings_input,
+                findings_for_agents,  # Use the converted findings
                 urgency_score,
                 session_id
             )
@@ -605,14 +611,18 @@ async def get_all_appointments():
     """Get all appointments for admin dashboard"""
     try:
         from scheduling_storage import SchedulingStorage
+        import os
+        import glob
+        
         storage = SchedulingStorage()
         appointments_dir = storage.appointments_dir
         appointments = []
         
         print(f"📋 ADMIN API: Loading appointments from {appointments_dir}")
         
-        if appointments_dir.exists():
-            for file_path in appointments_dir.glob("*.json"):
+        if os.path.exists(appointments_dir):
+            json_files = glob.glob(os.path.join(appointments_dir, "*.json"))
+            for file_path in json_files:
                 try:
                     with open(file_path, 'r') as f:
                         appointment_data = json.load(f)
@@ -638,14 +648,18 @@ async def get_all_patients():
     """Get all patients for admin dashboard"""
     try:
         from scheduling_storage import SchedulingStorage
+        import os
+        import glob
+        
         storage = SchedulingStorage()
-        patients_dir = storage.patients_dir
+        patients_dir = storage.patient_dir  # Note: it's patient_dir not patients_dir
         patients = []
         
         print(f"👥 ADMIN API: Loading patients from {patients_dir}")
         
-        if patients_dir.exists():
-            for file_path in patients_dir.glob("*.json"):
+        if os.path.exists(patients_dir):
+            json_files = glob.glob(os.path.join(patients_dir, "*.json"))
+            for file_path in json_files:
                 try:
                     with open(file_path, 'r') as f:
                         patient_data = json.load(f)
@@ -671,14 +685,18 @@ async def get_all_requests():
     """Get all appointment requests for admin dashboard"""
     try:
         from scheduling_storage import SchedulingStorage
+        import os
+        import glob
+        
         storage = SchedulingStorage()
         requests_dir = storage.requests_dir
         requests = []
         
         print(f"📧 ADMIN API: Loading requests from {requests_dir}")
         
-        if requests_dir.exists():
-            for file_path in requests_dir.glob("*.json"):
+        if os.path.exists(requests_dir):
+            json_files = glob.glob(os.path.join(requests_dir, "*.json"))
+            for file_path in json_files:
                 try:
                     with open(file_path, 'r') as f:
                         request_data = json.load(f)

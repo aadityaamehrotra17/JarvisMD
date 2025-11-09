@@ -13,6 +13,13 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     fetchAllData();
+    
+    // Auto-refresh every 10 seconds for real-time updates
+    const refreshInterval = setInterval(() => {
+      fetchAllData();
+    }, 10000);
+    
+    return () => clearInterval(refreshInterval);
   }, []);
 
   const fetchAllData = async () => {
@@ -101,12 +108,15 @@ const AdminDashboard = () => {
 
   const sendTestEmail = async (appointment) => {
     try {
+      const userEmail = prompt("Enter your email to receive the test appointment email:", "arnav@example.com");
+      if (!userEmail) return;
+      
       const response = await fetch('http://localhost:8000/api/admin/send-test-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           appointment_id: appointment.appointment_id,
-          test_email: 'your-email@example.com' // Replace with your email
+          test_email: userEmail
         })
       });
 
@@ -133,7 +143,18 @@ const AdminDashboard = () => {
   return (
     <div className="admin-dashboard">
       <div className="admin-header">
-        <h1>🏥 JarvisMD Admin Dashboard</h1>
+        <div className="header-top">
+          <button 
+            onClick={() => window.location.href = '/'}
+            className="home-btn"
+          >
+            ← Home
+          </button>
+          <h1>🏥 JarvisMD Admin Dashboard</h1>
+          <div className="last-updated">
+            Last updated: {new Date().toLocaleTimeString()}
+          </div>
+        </div>
         <div className="admin-stats">
           <div className="stat-card">
             <div className="stat-number">{appointments.length}</div>
