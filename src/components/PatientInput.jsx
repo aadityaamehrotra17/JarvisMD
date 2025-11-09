@@ -8,6 +8,7 @@ function PatientInput() {
     patientName: '',
     age: '',
     symptoms: '',
+    medicalHistory: [{ condition: '', duration: '' }],
     scanFiles: []
   })
   const [dragActive, setDragActive] = useState(false)
@@ -56,6 +57,31 @@ function PatientInput() {
     }))
   }
 
+  const addMedicalHistoryItem = () => {
+    setFormData(prev => ({
+      ...prev,
+      medicalHistory: [...prev.medicalHistory, { condition: '', duration: '' }]
+    }))
+  }
+
+  const removeMedicalHistoryItem = (index) => {
+    if (formData.medicalHistory.length > 1) {
+      setFormData(prev => ({
+        ...prev,
+        medicalHistory: prev.medicalHistory.filter((_, i) => i !== index)
+      }))
+    }
+  }
+
+  const handleMedicalHistoryChange = (index, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      medicalHistory: prev.medicalHistory.map((item, i) => 
+        i === index ? { ...item, [field]: value } : item
+      )
+    }))
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     
@@ -92,20 +118,19 @@ function PatientInput() {
     setAnalysisProgress(10)
     
     try {
-      // Format medical history from simplified fields
-      let medicalHistory = ''
-      if (formData.conditionName && formData.conditionDuration) {
-        medicalHistory = `${formData.conditionName} (${formData.conditionDuration} years)`
-      } else if (formData.conditionName) {
-        medicalHistory = formData.conditionName
-      }
-      
-      // Prepare form data for backend API
+      // Prepare form data for backend API with medical history
       const apiFormData = new FormData()
       apiFormData.append('patient_name', formData.patientName)
       apiFormData.append('patient_age', formData.age)
       apiFormData.append('symptoms', formData.symptoms)
-      apiFormData.append('medical_history', medicalHistory)
+      
+      // Format medical history as structured text
+      const medicalHistoryText = formData.medicalHistory
+        .filter(item => item.condition.trim() !== '')
+        .map(item => `${item.condition.trim()}${item.duration ? ` (${item.duration.trim()})` : ''}`)
+        .join('; ')
+      
+      apiFormData.append('medical_history', medicalHistoryText || 'None reported')
       apiFormData.append('scan', formData.scanFiles[0]) // Send first scan file
       
       setAnalysisProgress(30)
@@ -122,24 +147,34 @@ function PatientInput() {
         throw new Error(`API Error: ${response.status}`)
       }
       
-      setAnalysisProgress(80)
-      const analysisResult = await response.json()
-      
-      // Convert uploaded scan to base64 for storage
+      // Convert uploaded scan to base64 BEFORE getting API response
       const scanFile = formData.scanFiles[0]
       let scanImageData = null
       
       if (scanFile) {
         try {
+          console.log('🖼️ Converting scan image to base64...')
           const reader = new FileReader()
-          scanImageData = await new Promise((resolve) => {
-            reader.onload = (e) => resolve(e.target.result)
+          scanImageData = await new Promise((resolve, reject) => {
+            reader.onload = (e) => {
+              console.log('✅ Image conversion successful')
+              resolve(e.target.result)
+            }
+            reader.onerror = (error) => {
+              console.error('❌ Image conversion failed:', error)
+              reject(error)
+            }
             reader.readAsDataURL(scanFile)
           })
         } catch (error) {
           console.error('Error converting image to base64:', error)
+          // Continue without image if conversion fails
+          scanImageData = null
         }
       }
+
+      setAnalysisProgress(80)
+      const analysisResult = await response.json()
 
       // Add timestamp and scan image to the analysis result
       const timestampedResult = {
@@ -161,12 +196,13 @@ function PatientInput() {
       
       setAnalysisProgress(100)
       
-      // Navigate to case details page with the analysis
-      console.log('🎯 Navigating to case details with:', analysisResult.patient_id)
-      console.log('📦 Analysis result to pass:', analysisResult)
+      // Navigate to case details page with the complete analysis data (including scan image)
+      console.log('🎯 Navigating to case details with:', timestampedResult.patient_id)
+      console.log('📦 Complete analysis result to pass:', timestampedResult)
+      console.log('🖼️ Scan image included:', !!timestampedResult.scan_image)
       
-      navigate(`/case/${analysisResult.patient_id}`, { 
-        state: { analysisData: analysisResult }
+      navigate(`/case/${timestampedResult.patient_id}`, { 
+        state: { analysisData: timestampedResult }
       })
       
     } catch (error) {
@@ -254,37 +290,63 @@ function PatientInput() {
                 />
               </div>
 
-              {/* Medical History - Separate Box */}
-              <div className="medical-history-box">
-                <h4>📋 Medical History</h4>
-                <div className="history-fields">
-                  <div className="form-group compact">
-                    <label htmlFor="conditionName">Condition Name</label>
-                    <input
-                      type="text"
-                      id="conditionName"
-                      name="conditionName"
-                      value={formData.conditionName}
-                      onChange={handleInputChange}
-                      placeholder="e.g., Diabetes, Hypertension, Asthma..."
-                    />
-                  </div>
-                  <div className="form-group compact">
-                    <label htmlFor="conditionDuration">Years Affected</label>
-                    <input
-                      type="number"
-                      id="conditionDuration"
-                      name="conditionDuration"
-                      value={formData.conditionDuration}
-                      onChange={handleInputChange}
-                      placeholder="Years"
-                      min="0"
-                      max="100"
-                    />
-                  </div>
+              {/* Medical History Section */}
+              <div className="form-group">
+                <div className="medical-history-header">
+                  <label>Medical History</label>
+                  <button 
+                    type="button" 
+                    onClick={addMedicalHistoryItem}
+                    className="add-history-btn"
+                  >
+                    + Add Condition
+                  </button>
                 </div>
-                <small className="form-hint">Enter the most relevant condition for risk assessment</small>
+                
+                <div className="medical-history-labels">
+                  <div className="column-label">Condition</div>
+                  <div className="column-label">Duration</div>
+                </div>
+                
+                <div className="medical-history-list">
+                  {formData.medicalHistory.map((item, index) => (
+                    <div key={index} className="medical-history-item">
+                      <div className="history-inputs">
+                        <input
+                          type="text"
+                          placeholder="e.g., Diabetes, Hypertension"
+                          value={item.condition}
+                          onChange={(e) => handleMedicalHistoryChange(index, 'condition', e.target.value)}
+                          className="condition-input"
+                        />
+                        <input
+                          type="text"
+                          placeholder="e.g., 5 years, since 2020"
+                          value={item.duration}
+                          onChange={(e) => handleMedicalHistoryChange(index, 'duration', e.target.value)}
+                          className="duration-input"
+                        />
+                      </div>
+                      {formData.medicalHistory.length > 1 && (
+                        <button 
+                          type="button"
+                          onClick={() => removeMedicalHistoryItem(index)}
+                          className="remove-history-btn"
+                        >
+                          ✕
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                
+                {formData.medicalHistory.length === 0 && (
+                  <div className="no-history-message">
+                    <p>No medical history added. Click "Add Condition" to include relevant medical history.</p>
+                  </div>
+                )}
               </div>
+
             </div>
 
             {/* Right Column: File Upload */}

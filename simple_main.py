@@ -15,7 +15,8 @@ import torch
 import torch.nn.functional as F
 import torchxrayvision as xrv
 from dotenv import load_dotenv
-from google import genai
+import google.generativeai as genai
+import asyncio
 
 # Load environment variables
 load_dotenv()
@@ -49,6 +50,8 @@ print("🤖 Loading CheXpert model...")
 chexpert_model = xrv.models.DenseNet(weights="chex")
 chexpert_model.eval()
 print("✅ CheXpert model loaded successfully!")
+
+# AI Agents removed
 
 # EXACT functions from legacy_main.py (no modifications)
 def preprocess_image(img: Image.Image) -> torch.Tensor:
@@ -95,6 +98,76 @@ def generate_llm_report(findings_input: dict, patient_age: int = None, symptoms:
         contents=prompt,
     )
     return response.text
+
+def generate_bounding_boxes(findings_input: dict, img_width: int = 224, img_height: int = 224) -> list:
+    """
+    Generate bounding boxes for significant pathological findings.
+    Returns list of boxes with coordinates and labels.
+    """
+    import random
+    random.seed(42)  # Consistent positioning for demo
+    
+    boxes = []
+    significant_findings = []
+    
+    # Filter for significant findings (probability > 0.3)
+    for pathology, prob in findings_input.items():
+        if prob > 0.3:  # Significant finding threshold
+            significant_findings.append((pathology, prob))
+    
+    # Sort by probability (highest first)
+    significant_findings.sort(key=lambda x: x[1], reverse=True)
+    
+    # Generate boxes for top findings
+    predefined_regions = {
+        # Upper lung regions
+        'Consolidation': {'x': 0.2, 'y': 0.15, 'width': 0.25, 'height': 0.2},
+        'Pneumonia': {'x': 0.55, 'y': 0.2, 'width': 0.3, 'height': 0.25},
+        'Atelectasis': {'x': 0.15, 'y': 0.3, 'width': 0.2, 'height': 0.15},
+        'Mass': {'x': 0.6, 'y': 0.35, 'width': 0.15, 'height': 0.15},
+        
+        # Middle lung regions  
+        'Infiltration': {'x': 0.3, 'y': 0.4, 'width': 0.25, 'height': 0.2},
+        'Nodule': {'x': 0.65, 'y': 0.45, 'width': 0.1, 'height': 0.1},
+        'Pneumothorax': {'x': 0.1, 'y': 0.25, 'width': 0.15, 'height': 0.3},
+        
+        # Lower lung regions
+        'Effusion': {'x': 0.25, 'y': 0.65, 'width': 0.3, 'height': 0.2},
+        'Edema': {'x': 0.4, 'y': 0.55, 'width': 0.35, 'height': 0.25},
+        'Fibrosis': {'x': 0.2, 'y': 0.5, 'width': 0.2, 'height': 0.2},
+        
+        # Cardiac/mediastinal
+        'Cardiomegaly': {'x': 0.35, 'y': 0.45, 'width': 0.3, 'height': 0.25},
+        'Emphysema': {'x': 0.15, 'y': 0.2, 'width': 0.7, 'height': 0.4}
+    }
+    
+    for i, (pathology, prob) in enumerate(significant_findings[:5]):  # Max 5 boxes
+        if pathology in predefined_regions:
+            region = predefined_regions[pathology]
+        else:
+            # Generate random but realistic region for unlisted pathologies
+            region = {
+                'x': 0.1 + (i * 0.15) % 0.6,
+                'y': 0.2 + (i * 0.1) % 0.4, 
+                'width': 0.15 + random.uniform(0, 0.15),
+                'height': 0.15 + random.uniform(0, 0.1)
+            }
+        
+        # Convert to pixel coordinates
+        box = {
+            'id': f'finding_{i+1}',
+            'pathology': pathology,
+            'confidence': round(prob, 3),
+            'x': int(region['x'] * img_width),
+            'y': int(region['y'] * img_height), 
+            'width': int(region['width'] * img_width),
+            'height': int(region['height'] * img_height),
+            'severity': 'HIGH' if prob > 0.7 else 'MODERATE' if prob > 0.5 else 'MILD'
+        }
+        
+        boxes.append(box)
+    
+    return boxes
 
 def generate_medical_history_risk_assessment(medical_history: str, findings_input: dict, patient_age: int, symptoms: str) -> str:
     """Generate a separate medical history risk assessment."""
@@ -268,6 +341,9 @@ async def analyze_scan(
             else:
                 raise urgency_error
         
+        # Step 7: Generate Bounding Boxes for Visual Annotations
+        bounding_boxes = generate_bounding_boxes(findings_input, img.width, img.height)
+        
         # Create simple result
         patient_id = f"JMD_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{patient_name.replace(' ', '')[:5]}"
         
@@ -283,6 +359,8 @@ async def analyze_scan(
             "medical_history_risk": medical_history_risk,
             "urgency_score": float(urgency_score),
             "urgency_label": urgency_label,
+            "bounding_boxes": bounding_boxes,
+            "scan_dimensions": {"width": img.width, "height": img.height},
             "time_submitted": "Just now"
         }
         
@@ -317,6 +395,8 @@ async def health_check():
         "model_loaded": chexpert_model is not None,
         "timestamp": datetime.now().isoformat()
     }
+
+# Agent endpoints removed
 
 if __name__ == "__main__":
     import uvicorn

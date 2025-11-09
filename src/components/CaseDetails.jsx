@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
+import AnnotatedScanViewer from './AnnotatedScanViewer'
 import './CaseDetails.css'
 
 function CaseDetails() {
@@ -10,7 +11,6 @@ function CaseDetails() {
   const [loading, setLoading] = useState(true)
   const [parsedReport, setParsedReport] = useState(null)
   const [parsedUrgency, setParsedUrgency] = useState(null)
-  const [isImageModalOpen, setIsImageModalOpen] = useState(false)
 
   // Helper function to safely parse JSON from AI responses
   const parseJsonFromText = (text) => {
@@ -103,6 +103,8 @@ function CaseDetails() {
       console.log('🎯 Setting case data:', analysisData)
       setCaseData(analysisData)
       
+      // Patient context actions removed
+      
       // Parse the structured report and urgency assessment
       const report = parseJsonFromText(analysisData.structured_report)
       const urgency = parseJsonFromText(analysisData.urgency_level)
@@ -120,24 +122,7 @@ function CaseDetails() {
     setLoading(false)
   }, [id, location.state])
 
-  // Handle ESC key for closing modal
-  useEffect(() => {
-    const handleEscKey = (event) => {
-      if (event.key === 'Escape' && isImageModalOpen) {
-        setIsImageModalOpen(false)
-      }
-    }
 
-    if (isImageModalOpen) {
-      document.addEventListener('keydown', handleEscKey)
-      document.body.style.overflow = 'hidden' // Prevent background scrolling
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleEscKey)
-      document.body.style.overflow = 'unset' // Restore scrolling
-    }
-  }, [isImageModalOpen])
 
   const getPriorityColor = (priority) => {
     switch (priority) {
@@ -276,80 +261,24 @@ function CaseDetails() {
               <h3>📸 Medical Scan</h3>
               <div className="content-card small">
                 {caseData.scan_image ? (
-                  <div className="scan-display">
-                    <img 
-                      src={caseData.scan_image} 
-                      alt="Medical Scan" 
-                      className="medical-scan-image"
-                      onClick={() => setIsImageModalOpen(true)}
-                      title="Click to enlarge"
-                    />
-                  </div>
+                  <AnnotatedScanViewer 
+                    scanImage={caseData.scan_image}
+                    boundingBoxes={caseData.bounding_boxes || []}
+                    scanDimensions={caseData.scan_dimensions || {}}
+                    aiFindings={caseData.ai_findings || {}}
+                  />
                 ) : (
                   <div className="no-scan">No scan image available</div>
                 )}
               </div>
             </div>
 
-            {/* AI Pathology Detection - Compact Version */}
-            <div className="section compact">
-              <h3>🔬 Pathology Detection</h3>
-              <div className="content-card small">
-                
-                {/* Top 5 Findings Only */}
-                <div className="pathology-compact">
-                  {caseData.ai_findings && Object.keys(caseData.ai_findings).length > 0 ? (
-                    Object.entries(caseData.ai_findings)
-                      .filter(([pathology, probability]) => pathology && probability > 0.1)
-                      .sort(([,a], [,b]) => b - a)
-                      .slice(0, 5) // Only show top 5
-                      .map(([pathology, probability], index) => (
-                        <div key={index} className="pathology-row">
-                          <span className="pathology-name">{pathology}</span>
-                          <div className="pathology-right">
-                            <div className="pathology-mini-bar">
-                              <div 
-                                className="pathology-mini-fill"
-                                style={{ 
-                                  width: `${probability * 100}%`,
-                                  backgroundColor: probability > 0.5 ? '#ef4444' : probability > 0.3 ? '#f59e0b' : '#10b981'
-                                }}
-                              />
-                            </div>
-                            <span className="pathology-percent">{(probability * 100).toFixed(0)}%</span>
-                          </div>
-                        </div>
-                      ))
-                  ) : (
-                    <div className="no-findings">No significant findings detected</div>
-                  )}
-                </div>
-              </div>
-            </div>
-
           </div>
         </div>
+
+        {/* AI Agent Section Removed */}
       </div>
 
-      {/* Image Modal */}
-      {isImageModalOpen && caseData?.scan_image && (
-        <div className="image-modal-overlay" onClick={() => setIsImageModalOpen(false)}>
-          <div className="image-modal-content" onClick={(e) => e.stopPropagation()}>
-            <button 
-              className="image-modal-close"
-              onClick={() => setIsImageModalOpen(false)}
-              title="Close (ESC)"
-            >
-              ✕
-            </button>
-            <img 
-              src={caseData.scan_image} 
-              alt="Medical Scan - Enlarged View" 
-              className="image-modal-img"
-            />
-          </div>
-        </div>
-      )}
     </div>
   )
 }
