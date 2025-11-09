@@ -1,0 +1,13 @@
+{
+  "patient_id": "JMD_20251109_100741_Arnav",
+  "appointment_requests": [
+    "eb59bc7a",
+    "d310834a",
+    "d14f3976"
+  ],
+  "confirmed_appointments": [
+    "APPT_20251109_100745"
+  ],
+  "created_at": "2025-11-09T10:07:42.837992",
+  "updated_at": "2025-11-09T10:07:48.355992"
+}

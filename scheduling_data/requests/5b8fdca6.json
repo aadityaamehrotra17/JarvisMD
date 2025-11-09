@@ -1,0 +1,29 @@
+{
+  "request_id": "5b8fdca6",
+  "patient_id": "JMD_20251109_TEST_001",
+  "doctor_id": "dr_sarah_mitchell",
+  "doctor_name": "Dr. Sarah Mitchell",
+  "urgency_level": "PRIORITY",
+  "preferred_slots": [
+    {
+      "date": "2025-11-10",
+      "time": "09:00",
+      "datetime": "2025-11-10T09:00:00"
+    },
+    {
+      "date": "2025-11-10",
+      "time": "14:00",
+      "datetime": "2025-11-10T14:00:00"
+    },
+    {
+      "date": "2025-11-11",
+      "time": "09:00",
+      "datetime": "2025-11-11T09:00:00"
+    }
+  ],
+  "email_content": "Subject: PRIORITY Appointment Request: John Smith - Cardiology Consultation\n\nDear Dr. Mitchell,\n\nThis email is to request an urgent cardiology consultation for John Smith, a 65-year-old patient presenting with chest pain, shortness of breath, and fatigue.\n\nBased on initial assessment and machine learning analysis, key findings include cardiomegaly and edema. Due to the nature of these symptoms and findings, this case is classified as **PRIORITY**.\n\nPlease find below the patient's information:\n\n*   **Patient Name:** John Smith\n*   **Age:** 65\n*   **Symptoms:** Chest pain, shortness of breath, fatigue\n*   **Key ML Findings:** Cardiomegaly, Edema\n\nPlease provide your earliest available appointment slots for Mr. Smith. We can be reached at this email address or by phone at [Your Phone Number] to coordinate scheduling.\n\nThank you for your prompt attention to this urgent matter.\n\nSincerely,\n\n[Your Name/Medical Coordination System Name]\n[Your Title/Department]\n[Your Contact Information]",
+  "status": "sent",
+  "sent_at": "2025-11-09T09:44:41.206909",
+  "response_received_at": null,
+  "doctor_response": null
+}

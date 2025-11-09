@@ -25,6 +25,13 @@ function Homepage() {
       icon: "🚨",
       path: "/dashboard",
       color: "red"
+    },
+    {
+      title: "Admin Dashboard",
+      description: "Calendar view, appointments management, and email testing interface",
+      icon: "⚙️",
+      path: "/admin",
+      color: "purple"
     }
   ]
 

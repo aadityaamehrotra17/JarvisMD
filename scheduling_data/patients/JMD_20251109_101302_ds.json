@@ -1,0 +1,13 @@
+{
+  "patient_id": "JMD_20251109_101302_ds",
+  "appointment_requests": [
+    "5366beaf",
+    "8be47e94",
+    "009b9da1"
+  ],
+  "confirmed_appointments": [
+    "APPT_20251109_101306"
+  ],
+  "created_at": "2025-11-09T10:13:04.195503",
+  "updated_at": "2025-11-09T10:13:09.715739"
+}

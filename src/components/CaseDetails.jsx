@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import AnnotatedScanViewer from './AnnotatedScanViewer'
+import WorkflowProgress from './WorkflowProgress'
 import './CaseDetails.css'
 
 function CaseDetails() {
@@ -11,6 +12,7 @@ function CaseDetails() {
   const [loading, setLoading] = useState(true)
   const [parsedReport, setParsedReport] = useState(null)
   const [parsedUrgency, setParsedUrgency] = useState(null)
+  const [showWorkflowProgress, setShowWorkflowProgress] = useState(false)
 
   // Helper function to safely parse JSON from AI responses
   const parseJsonFromText = (text) => {
@@ -114,6 +116,15 @@ function CaseDetails() {
       
       setParsedReport(report)
       setParsedUrgency(urgency)
+      
+      // Check if this case has an active workflow session
+      if (analysisData.multi_agent_workflow?.session_id) {
+        console.log('🤖 Multi-agent workflow session found:', analysisData.multi_agent_workflow.session_id)
+        // Auto-show workflow progress if workflow is not completed
+        if (!analysisData.multi_agent_workflow.workflow_completed) {
+          setShowWorkflowProgress(true)
+        }
+      }
     } else {
       console.log('❌ No analysis data found for patient ID:', id)
       // No fallback to mock data - let the error state handle it
@@ -187,9 +198,21 @@ function CaseDetails() {
           </div>
         </div>
         
-        <div className={`urgency-indicator-separate ${getUrgencyLevel(caseData)}`}>
-          <div className="urgency-score">{caseData.urgency_score?.toFixed(1) || 'N/A'}</div>
-          <div className="urgency-label">{getUrgencyLevelText(caseData)}</div>
+        <div className="header-actions">
+          {caseData.multi_agent_workflow?.session_id && (
+            <button 
+              onClick={() => setShowWorkflowProgress(true)}
+              className={`workflow-button ${caseData.multi_agent_workflow.workflow_completed ? 'completed' : 'active'}`}
+              title="View AI Workflow Progress"
+            >
+              🤖 {caseData.multi_agent_workflow.workflow_completed ? 'View Workflow' : 'Live Workflow'}
+            </button>
+          )}
+          
+          <div className={`urgency-indicator-separate ${getUrgencyLevel(caseData)}`}>
+            <div className="urgency-score">{caseData.urgency_score?.toFixed(1) || 'N/A'}</div>
+            <div className="urgency-label">{getUrgencyLevelText(caseData)}</div>
+          </div>
         </div>
       </div>
 
@@ -276,8 +299,63 @@ function CaseDetails() {
           </div>
         </div>
 
-        {/* AI Agent Section Removed */}
+        {/* Multi-Agent Workflow Results */}
+        {caseData.multi_agent_workflow && (
+          <div className="section">
+            <h3>🤖 AI Workflow Results</h3>
+            <div className="content-card">
+              <div className="workflow-results">
+                <div className="workflow-status">
+                  <span className={`status-badge ${caseData.multi_agent_workflow.case_classification?.toLowerCase()}`}>
+                    {caseData.multi_agent_workflow.case_classification || 'Processing...'}
+                  </span>
+                  <span className={`completion-badge ${caseData.multi_agent_workflow.workflow_completed ? 'completed' : 'in-progress'}`}>
+                    {caseData.multi_agent_workflow.workflow_completed ? 'Completed' : 'In Progress'}
+                  </span>
+                </div>
+                
+                {caseData.multi_agent_workflow.appointment_scheduled && caseData.multi_agent_workflow.appointment_details && (
+                  <div className="appointment-result success">
+                    <h4>✅ Appointment Scheduled</h4>
+                    <p><strong>Doctor:</strong> Dr. {caseData.multi_agent_workflow.appointment_details.doctor_name}</p>
+                    <p><strong>Date:</strong> {new Date(caseData.multi_agent_workflow.appointment_details.appointment_datetime).toLocaleString()}</p>
+                    <p><strong>Status:</strong> {caseData.multi_agent_workflow.appointment_details.status}</p>
+                  </div>
+                )}
+                
+                {caseData.multi_agent_workflow.health_recommendations && (
+                  <div className="health-recommendations">
+                    <h4>📋 Health Recommendations</h4>
+                    <p>Personalized health recommendations have been generated for this low-risk case.</p>
+                  </div>
+                )}
+                
+                {caseData.multi_agent_workflow.selected_doctors?.length > 0 && (
+                  <div className="selected-doctors">
+                    <h4>👨‍⚕️ Contacted Specialists</h4>
+                    <div className="doctors-list">
+                      {caseData.multi_agent_workflow.selected_doctors.map((doctor, index) => (
+                        <span key={index} className="doctor-tag">
+                          Dr. {doctor.name} ({doctor.specialty})
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
+
+      {/* Workflow Progress Modal */}
+      {showWorkflowProgress && caseData.multi_agent_workflow?.session_id && (
+        <WorkflowProgress
+          sessionId={caseData.multi_agent_workflow.session_id}
+          isVisible={showWorkflowProgress}
+          onClose={() => setShowWorkflowProgress(false)}
+        />
+      )}
 
     </div>
   )

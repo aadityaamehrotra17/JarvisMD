@@ -1,0 +1,29 @@
+{
+  "request_id": "e1d88673",
+  "patient_id": "JMD_20251109_TEST_001",
+  "doctor_id": "dr_james_hartwell",
+  "doctor_name": "Dr. James Hartwell",
+  "urgency_level": "PRIORITY",
+  "preferred_slots": [
+    {
+      "date": "2025-11-10",
+      "time": "09:00",
+      "datetime": "2025-11-10T09:00:00"
+    },
+    {
+      "date": "2025-11-10",
+      "time": "14:00",
+      "datetime": "2025-11-10T14:00:00"
+    },
+    {
+      "date": "2025-11-11",
+      "time": "09:00",
+      "datetime": "2025-11-11T09:00:00"
+    }
+  ],
+  "email_content": "Subject: PRIORITY Appointment Request: John Smith - Cardiology Consultation\n\nDear Dr. Hartwell's Office,\n\nThis email is to request an urgent cardiology consultation appointment for John Smith, a 65-year-old patient.\n\nMr. Smith is presenting with chest pain, shortness of breath, and fatigue. Key findings from our preliminary ML analysis indicate cardiomegaly and edema. Given these symptoms and findings, we have flagged this case as **PRIORITY**.\n\nPlease find below the patient's contact information:\n\n*   Patient Name: John Smith\n*   Age: 65\n*   [Insert Phone Number Here]\n*   [Insert Email Address Here]\n\nCould you please provide us with your earliest available appointment slots for Mr. Smith? We understand your schedule may be busy, but given the urgency, we would greatly appreciate your prompt attention to this request.\n\nThank you for your time and consideration.\n\nSincerely,\n\n[Your Name/Medical Coordination System Name]\n[Your Title/Department]\n[Your Contact Information]",
+  "status": "sent",
+  "sent_at": "2025-11-09T09:44:44.617902",
+  "response_received_at": null,
+  "doctor_response": null
+}

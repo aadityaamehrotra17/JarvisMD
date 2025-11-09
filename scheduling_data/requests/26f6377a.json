@@ -1,0 +1,29 @@
+{
+  "request_id": "26f6377a",
+  "patient_id": "JMD_20251109_103326_Sahil",
+  "doctor_id": "dr_karen_white",
+  "doctor_name": "Dr. Karen White",
+  "urgency_level": "CRITICAL",
+  "preferred_slots": [
+    {
+      "date": "2025-11-10",
+      "time": "09:00",
+      "datetime": "2025-11-10T09:00:00"
+    },
+    {
+      "date": "2025-11-10",
+      "time": "14:00",
+      "datetime": "2025-11-10T14:00:00"
+    },
+    {
+      "date": "2025-11-11",
+      "time": "09:00",
+      "datetime": "2025-11-11T09:00:00"
+    }
+  ],
+  "email_content": "Appointment request for CRITICAL case",
+  "status": "sent",
+  "sent_at": "2025-11-09T10:33:28.987454",
+  "response_received_at": null,
+  "doctor_response": null
+}

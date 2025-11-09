@@ -3,6 +3,7 @@ import Homepage from './components/Homepage'
 import PatientInput from './components/PatientInput'
 import Dashboard from './components/Dashboard'
 import CaseDetails from './components/CaseDetails'
+import AdminDashboard from './components/AdminDashboard'
 import logo from './assets/logo.png'
 import './App.css'
 
@@ -27,6 +28,7 @@ function AppContent() {
           <Route path="/input" element={<PatientInput />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/case/:id" element={<CaseDetails />} />
+          <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
       </main>
     </div>

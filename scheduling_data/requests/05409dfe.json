@@ -1,0 +1,29 @@
+{
+  "request_id": "05409dfe",
+  "patient_id": "JMD_20251109_TEST_001",
+  "doctor_id": "dr_karen_white",
+  "doctor_name": "Dr. Karen White",
+  "urgency_level": "PRIORITY",
+  "preferred_slots": [
+    {
+      "date": "2025-11-10",
+      "time": "09:00",
+      "datetime": "2025-11-10T09:00:00"
+    },
+    {
+      "date": "2025-11-10",
+      "time": "14:00",
+      "datetime": "2025-11-10T14:00:00"
+    },
+    {
+      "date": "2025-11-11",
+      "time": "09:00",
+      "datetime": "2025-11-11T09:00:00"
+    }
+  ],
+  "email_content": "Subject: PRIORITY Appointment Request: John Smith (Age 65) - Chest Pain, Shortness of Breath\n\nDear Dr. White,\n\nThis email is to request an urgent appointment for John Smith, a 65-year-old patient presenting with chest pain, shortness of breath, and fatigue. Based on initial assessment and machine learning analysis, key findings include cardiomegaly and edema.\n\nGiven these symptoms and findings, we have classified this case as **PRIORITY**.\n\nPlease find below the patient's contact information:\n\n*   Patient Name: John Smith\n*   Age: 65\n\nCould you please provide your earliest available appointment slots for Mr. Smith?\n\nThank you for your prompt attention to this urgent matter.\n\nSincerely,\n\n[Your Medical Coordination System Name/Your Name]\n[Your Title/Department]\n[Your Contact Information]",
+  "status": "sent",
+  "sent_at": "2025-11-09T09:44:47.380613",
+  "response_received_at": null,
+  "doctor_response": null
+}
