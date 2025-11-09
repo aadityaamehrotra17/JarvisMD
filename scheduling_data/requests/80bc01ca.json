@@ -1,0 +1,29 @@
+{
+  "request_id": "80bc01ca",
+  "patient_id": "JMD_20251109_110249_manoj",
+  "doctor_id": "dr_david_wilson",
+  "doctor_name": "Dr. David Wilson",
+  "urgency_level": "ROUTINE",
+  "preferred_slots": [
+    {
+      "date": "2025-11-10",
+      "time": "09:00",
+      "datetime": "2025-11-10T09:00:00"
+    },
+    {
+      "date": "2025-11-10",
+      "time": "14:00",
+      "datetime": "2025-11-10T14:00:00"
+    },
+    {
+      "date": "2025-11-11",
+      "time": "09:00",
+      "datetime": "2025-11-11T09:00:00"
+    }
+  ],
+  "email_content": "Appointment request for ROUTINE case",
+  "status": "sent",
+  "sent_at": "2025-11-09T11:02:51.945097",
+  "response_received_at": null,
+  "doctor_response": null
+}

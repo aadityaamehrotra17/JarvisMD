@@ -1,0 +1,29 @@
+{
+  "request_id": "1add143a",
+  "patient_id": "JMD_20251109_105749_Papa",
+  "doctor_id": "dr_james_hartwell",
+  "doctor_name": "Dr. James Hartwell",
+  "urgency_level": "CRITICAL",
+  "preferred_slots": [
+    {
+      "date": "2025-11-10",
+      "time": "09:00",
+      "datetime": "2025-11-10T09:00:00"
+    },
+    {
+      "date": "2025-11-10",
+      "time": "14:00",
+      "datetime": "2025-11-10T14:00:00"
+    },
+    {
+      "date": "2025-11-11",
+      "time": "09:00",
+      "datetime": "2025-11-11T09:00:00"
+    }
+  ],
+  "email_content": "Appointment request for CRITICAL case",
+  "status": "sent",
+  "sent_at": "2025-11-09T10:57:50.244776",
+  "response_received_at": null,
+  "doctor_response": null
+}

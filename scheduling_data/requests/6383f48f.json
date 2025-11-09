@@ -1,0 +1,29 @@
+{
+  "request_id": "6383f48f",
+  "patient_id": "JMD_20251109_111041_Adity",
+  "doctor_id": "dr_james_hartwell",
+  "doctor_name": "Dr. James Hartwell",
+  "urgency_level": "CRITICAL",
+  "preferred_slots": [
+    {
+      "date": "2025-11-10",
+      "time": "09:00",
+      "datetime": "2025-11-10T09:00:00"
+    },
+    {
+      "date": "2025-11-10",
+      "time": "14:00",
+      "datetime": "2025-11-10T14:00:00"
+    },
+    {
+      "date": "2025-11-11",
+      "time": "09:00",
+      "datetime": "2025-11-11T09:00:00"
+    }
+  ],
+  "email_content": "Subject: \ud83c\udfe5 JarvisMD Appointment Request - CRITICAL Case\n\nDear Dr. Dr. James Hartwell,\n\nI hope this message finds you well. We have an urgent medical case that requires your expertise in Cardiologist.\n\nPATIENT INFORMATION:\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\u2022 Patient: Adityya \n\u2022 Age: 20\n\u2022 Case Priority: CRITICAL\n\u2022 Primary Symptoms: - severe chest pains\r\n- lot of blood coughing\n\u2022 Key ML Findings: Atelectasis, Consolidation, Pneumothorax, Edema, Effusion, Lung Lesion, Fracture, Lung Opacity, Enlarged Cardiomediastinum\n\nREQUESTED APPOINTMENT SLOTS:\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\u2022 2025-11-10 at 09:00\n\u2022 2025-11-10 at 14:00\n\u2022 2025-11-11 at 09:00\n\nThis case has been classified as CRITICAL based on our AI-powered medical assessment. Your expertise in Cardiologist makes you an ideal specialist for this consultation.\n\nPlease confirm your availability for any of the suggested time slots, or propose alternative times that work better for your schedule.\n\nCONTACT INFORMATION:\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\u2022 Patient Contact: +44-161-123-4567\n\u2022 JarvisMD Coordination: automated-system@jarvismd.com\n\u2022 Request ID: BB24B49D\n\nThank you for your dedication to patient care. We look forward to your prompt response.\n\nBest regards,\nJarvisMD Healthcare Coordination System\nAutomated Medical Scheduling Platform\n\n---\nThis is an automated message from JarvisMD's AI-powered healthcare coordination system.\nFor technical issues, please contact: support@jarvismd.com\n",
+  "status": "sent",
+  "sent_at": "2025-11-09T11:10:43.612337",
+  "response_received_at": null,
+  "doctor_response": null
+}

@@ -360,7 +360,8 @@
 }
 
 .nav-card.blue .nav-title,
-.nav-card.red .nav-title {
+.nav-card.red .nav-title,
+.nav-card.purple .nav-title {
   color: white;
 }
 

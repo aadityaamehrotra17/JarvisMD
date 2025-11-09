@@ -1,0 +1,12 @@
+{
+  "patient_id": "JMD_20251109_110249_manoj",
+  "appointment_requests": [
+    "93b5c24e",
+    "80bc01ca"
+  ],
+  "confirmed_appointments": [
+    "APPT_20251109_110253"
+  ],
+  "created_at": "2025-11-09T11:02:51.443802",
+  "updated_at": "2025-11-09T11:02:55.460479"
+}

@@ -27,73 +27,218 @@ DOCTORS_DATABASE = {
         "id": "dr_james_hartwell",
         "name": "Dr. James Hartwell",
         "specialty": "Cardiologist", 
-        "email": "j.hartwell@manchesterheart.nhs.uk",
+        "email": "sahil2023saxena@gmail.com",  # All doctors use your email for testing
         "phone": "+44-161-276-1234",
         "hospital": "Manchester Royal Infirmary",
         "expertise": ["Heart Failure", "Cardiomegaly", "Arrhythmia"],
         "experience_years": 18,
         "rating": 4.9,
-        "seniority": "Consultant"
+        "seniority": "Consultant",
+        "available_dates": [
+            {"date": "2025-11-15", "time": "09:00", "datetime": "2025-11-15T09:00:00"},
+            {"date": "2025-11-18", "time": "14:30", "datetime": "2025-11-18T14:30:00"},
+            {"date": "2025-11-22", "time": "10:00", "datetime": "2025-11-22T10:00:00"},
+            {"date": "2025-11-25", "time": "15:00", "datetime": "2025-11-25T15:00:00"},
+            {"date": "2025-11-28", "time": "11:30", "datetime": "2025-11-28T11:30:00"},
+            {"date": "2025-12-02", "time": "13:00", "datetime": "2025-12-02T13:00:00"}
+        ]
     },
     "dr_sarah_mitchell": {
         "id": "dr_sarah_mitchell", 
         "name": "Dr. Sarah Mitchell",
         "specialty": "Cardiologist",
-        "email": "s.mitchell@wythenshawe.nhs.uk",
+        "email": "sahil2023saxena@gmail.com",
         "phone": "+44-161-291-2345",
         "hospital": "Wythenshawe Hospital",
         "expertise": ["Interventional Cardiology", "Cardiomegaly"],
         "experience_years": 22,
         "rating": 4.8,
-        "seniority": "Senior Consultant"
+        "seniority": "Senior Consultant",
+        "available_dates": [
+            {"date": "2025-11-12", "time": "08:30", "datetime": "2025-11-12T08:30:00"},
+            {"date": "2025-11-16", "time": "16:00", "datetime": "2025-11-16T16:00:00"},
+            {"date": "2025-11-20", "time": "09:30", "datetime": "2025-11-20T09:30:00"},
+            {"date": "2025-11-24", "time": "14:00", "datetime": "2025-11-24T14:00:00"},
+            {"date": "2025-11-27", "time": "10:30", "datetime": "2025-11-27T10:30:00"},
+            {"date": "2025-12-01", "time": "15:30", "datetime": "2025-12-01T15:30:00"},
+            {"date": "2025-12-05", "time": "12:00", "datetime": "2025-12-05T12:00:00"}
+        ]
     },
     "dr_lisa_patel": {
         "id": "dr_lisa_patel",
         "name": "Dr. Lisa Patel",
         "specialty": "Pulmonologist",
-        "email": "l.patel@cmft.nhs.uk", 
+        "email": "sahil2023saxena@gmail.com", 
         "phone": "+44-161-276-6789",
         "hospital": "Manchester Royal Infirmary",
         "expertise": ["Pneumonia", "COPD", "Lung Cancer"],
         "experience_years": 15,
         "rating": 4.8,
-        "seniority": "Consultant"
+        "seniority": "Consultant",
+        "available_dates": [
+            {"date": "2025-11-13", "time": "11:00", "datetime": "2025-11-13T11:00:00"},
+            {"date": "2025-11-17", "time": "13:30", "datetime": "2025-11-17T13:30:00"},
+            {"date": "2025-11-21", "time": "15:45", "datetime": "2025-11-21T15:45:00"},
+            {"date": "2025-11-26", "time": "09:15", "datetime": "2025-11-26T09:15:00"},
+            {"date": "2025-11-29", "time": "14:15", "datetime": "2025-11-29T14:15:00"}
+        ]
     },
     "dr_david_wilson": {
         "id": "dr_david_wilson",
         "name": "Dr. David Wilson", 
         "specialty": "Pulmonologist",
-        "email": "d.wilson@wythenshawe.nhs.uk",
+        "email": "sahil2023saxena@gmail.com",
         "phone": "+44-161-291-7890",
         "hospital": "Wythenshawe Hospital",
         "expertise": ["Lung Transplant", "Pneumonia"],
         "experience_years": 20,
         "rating": 4.9,
-        "seniority": "Senior Consultant"
+        "seniority": "Senior Consultant",
+        "available_dates": [
+            {"date": "2025-11-14", "time": "10:15", "datetime": "2025-11-14T10:15:00"},
+            {"date": "2025-11-19", "time": "16:30", "datetime": "2025-11-19T16:30:00"},
+            {"date": "2025-11-23", "time": "08:45", "datetime": "2025-11-23T08:45:00"},
+            {"date": "2025-11-30", "time": "12:30", "datetime": "2025-11-30T12:30:00"},
+            {"date": "2025-12-03", "time": "17:00", "datetime": "2025-12-03T17:00:00"},
+            {"date": "2025-12-06", "time": "11:15", "datetime": "2025-12-06T11:15:00"}
+        ]
     },
     "dr_karen_white": {
         "id": "dr_karen_white",
         "name": "Dr. Karen White",
         "specialty": "Emergency Medicine",
-        "email": "k.white@cmft.nhs.uk",
+        "email": "sahil2023saxena@gmail.com",
         "phone": "+44-161-276-0123", 
         "hospital": "Manchester Royal Infirmary",
         "expertise": ["Trauma", "Critical Care"],
         "experience_years": 17,
         "rating": 4.8,
-        "seniority": "Consultant"
+        "seniority": "Consultant",
+        "available_dates": [
+            {"date": "2025-11-11", "time": "07:00", "datetime": "2025-11-11T07:00:00"},
+            {"date": "2025-11-15", "time": "19:00", "datetime": "2025-11-15T19:00:00"},
+            {"date": "2025-11-18", "time": "06:30", "datetime": "2025-11-18T06:30:00"},
+            {"date": "2025-11-22", "time": "20:00", "datetime": "2025-11-22T20:00:00"},
+            {"date": "2025-11-25", "time": "07:30", "datetime": "2025-11-25T07:30:00"}
+        ]
     },
     "dr_mark_davis": {
         "id": "dr_mark_davis",
         "name": "Dr. Mark Davis",
         "specialty": "Emergency Medicine",
-        "email": "m.davis@wythenshawe.nhs.uk",
+        "email": "sahil2023saxena@gmail.com",
         "phone": "+44-161-291-1234",
         "hospital": "Wythenshawe Hospital", 
         "expertise": ["Emergency Surgery", "Critical Care"],
         "experience_years": 19,
         "rating": 4.9,
-        "seniority": "Senior Consultant"
+        "seniority": "Senior Consultant",
+        "available_dates": [
+            {"date": "2025-11-12", "time": "21:00", "datetime": "2025-11-12T21:00:00"},
+            {"date": "2025-11-16", "time": "05:30", "datetime": "2025-11-16T05:30:00"},
+            {"date": "2025-11-20", "time": "22:15", "datetime": "2025-11-20T22:15:00"},
+            {"date": "2025-11-24", "time": "06:00", "datetime": "2025-11-24T06:00:00"},
+            {"date": "2025-11-28", "time": "23:00", "datetime": "2025-11-28T23:00:00"},
+            {"date": "2025-12-01", "time": "04:45", "datetime": "2025-12-01T04:45:00"}
+        ]
+    },
+    # NEW DOCTORS ADDED
+    "dr_michael_brown": {
+        "id": "dr_michael_brown",
+        "name": "Dr. Michael Brown",
+        "specialty": "Orthopedic Surgeon",
+        "email": "sahil2023saxena@gmail.com",
+        "phone": "+44-161-345-6789",
+        "hospital": "Manchester Royal Infirmary",
+        "expertise": ["Joint Replacement", "Sports Medicine", "Fracture Care"],
+        "experience_years": 14,
+        "rating": 4.7,
+        "seniority": "Consultant",
+        "available_dates": [
+            {"date": "2025-11-13", "time": "08:00", "datetime": "2025-11-13T08:00:00"},
+            {"date": "2025-11-17", "time": "12:00", "datetime": "2025-11-17T12:00:00"},
+            {"date": "2025-11-21", "time": "16:00", "datetime": "2025-11-21T16:00:00"},
+            {"date": "2025-11-25", "time": "10:00", "datetime": "2025-11-25T10:00:00"},
+            {"date": "2025-11-29", "time": "14:00", "datetime": "2025-11-29T14:00:00"}
+        ]
+    },
+    "dr_amanda_clark": {
+        "id": "dr_amanda_clark",
+        "name": "Dr. Amanda Clark",
+        "specialty": "Neurologist",
+        "email": "sahil2023saxena@gmail.com",
+        "phone": "+44-161-456-7890",
+        "hospital": "Salford Royal Hospital",
+        "expertise": ["Stroke Care", "Epilepsy", "Headache Disorders"],
+        "experience_years": 16,
+        "rating": 4.9,
+        "seniority": "Senior Consultant",
+        "available_dates": [
+            {"date": "2025-11-14", "time": "09:30", "datetime": "2025-11-14T09:30:00"},
+            {"date": "2025-11-18", "time": "11:00", "datetime": "2025-11-18T11:00:00"},
+            {"date": "2025-11-22", "time": "15:30", "datetime": "2025-11-22T15:30:00"},
+            {"date": "2025-11-26", "time": "13:45", "datetime": "2025-11-26T13:45:00"},
+            {"date": "2025-11-30", "time": "10:15", "datetime": "2025-11-30T10:15:00"},
+            {"date": "2025-12-04", "time": "14:30", "datetime": "2025-12-04T14:30:00"}
+        ]
+    },
+    "dr_robert_johnson": {
+        "id": "dr_robert_johnson",
+        "name": "Dr. Robert Johnson",
+        "specialty": "Gastroenterologist",
+        "email": "sahil2023saxena@gmail.com",
+        "phone": "+44-161-567-8901",
+        "hospital": "Manchester Royal Infirmary",
+        "expertise": ["Endoscopy", "IBD Treatment", "Liver Disease"],
+        "experience_years": 21,
+        "rating": 4.8,
+        "seniority": "Senior Consultant",
+        "available_dates": [
+            {"date": "2025-11-15", "time": "13:00", "datetime": "2025-11-15T13:00:00"},
+            {"date": "2025-11-19", "time": "15:00", "datetime": "2025-11-19T15:00:00"},
+            {"date": "2025-11-23", "time": "11:30", "datetime": "2025-11-23T11:30:00"},
+            {"date": "2025-11-27", "time": "16:30", "datetime": "2025-11-27T16:30:00"},
+            {"date": "2025-12-02", "time": "09:45", "datetime": "2025-12-02T09:45:00"}
+        ]
+    },
+    "dr_jennifer_lee": {
+        "id": "dr_jennifer_lee",
+        "name": "Dr. Jennifer Lee",
+        "specialty": "Dermatologist",
+        "email": "sahil2023saxena@gmail.com",
+        "phone": "+44-161-678-9012",
+        "hospital": "Wythenshawe Hospital",
+        "expertise": ["Skin Cancer", "Psoriasis", "Cosmetic Dermatology"],
+        "experience_years": 12,
+        "rating": 4.6,
+        "seniority": "Consultant",
+        "available_dates": [
+            {"date": "2025-11-16", "time": "10:45", "datetime": "2025-11-16T10:45:00"},
+            {"date": "2025-11-20", "time": "14:15", "datetime": "2025-11-20T14:15:00"},
+            {"date": "2025-11-24", "time": "12:30", "datetime": "2025-11-24T12:30:00"},
+            {"date": "2025-11-28", "time": "16:45", "datetime": "2025-11-28T16:45:00"},
+            {"date": "2025-12-03", "time": "11:00", "datetime": "2025-12-03T11:00:00"},
+            {"date": "2025-12-07", "time": "15:15", "datetime": "2025-12-07T15:15:00"}
+        ]
+    },
+    "dr_thomas_garcia": {
+        "id": "dr_thomas_garcia",
+        "name": "Dr. Thomas Garcia",
+        "specialty": "Radiologist",
+        "email": "sahil2023saxena@gmail.com",
+        "phone": "+44-161-789-0123",
+        "hospital": "The Christie Hospital",
+        "expertise": ["CT Imaging", "MRI Interpretation", "Nuclear Medicine"],
+        "experience_years": 19,
+        "rating": 4.7,
+        "seniority": "Senior Consultant",
+        "available_dates": [
+            {"date": "2025-11-17", "time": "08:15", "datetime": "2025-11-17T08:15:00"},
+            {"date": "2025-11-21", "time": "12:45", "datetime": "2025-11-21T12:45:00"},
+            {"date": "2025-11-25", "time": "17:30", "datetime": "2025-11-25T17:30:00"},
+            {"date": "2025-11-29", "time": "09:00", "datetime": "2025-11-29T09:00:00"},
+            {"date": "2025-12-04", "time": "13:15", "datetime": "2025-12-04T13:15:00"}
+        ]
     }
 }
 
@@ -132,7 +277,13 @@ def get_doctor_info(doctor_id):
     return DOCTORS_DATABASE.get(doctor_id)
 
 def get_available_slots(doctor_id, days_ahead=14):
-    """Get mock available slots"""
+    """Get available appointment slots from doctor database"""
+    doctor = DOCTORS_DATABASE.get(doctor_id)
+    if doctor and 'available_dates' in doctor:
+        # Return the actual available dates from the doctor database
+        return doctor['available_dates']
+    
+    # Fallback: generate mock slots if doctor not found
     from datetime import datetime, timedelta
     
     slots = []
@@ -424,11 +575,18 @@ class DoctorMatchingAgent:
         for doc_id in selected_doctor_ids:
             doctor_info = get_doctor_info(doc_id)
             if doctor_info:
-                # Add availability information
-                available_slots = get_available_slots(doc_id, days_ahead=14)
-                doctor_info['available_slots'] = available_slots[:5]  # Next 5 slots
+                # Use available dates from database, rename to available_slots for compatibility
+                if 'available_dates' in doctor_info:
+                    doctor_info['available_slots'] = doctor_info['available_dates'][:5]  # Next 5 slots
+                    available_slot_count = len(doctor_info['available_dates'])
+                else:
+                    # Fallback to generated slots if no dates in database
+                    available_slots = get_available_slots(doc_id, days_ahead=14)
+                    doctor_info['available_slots'] = available_slots[:5]
+                    available_slot_count = len(available_slots)
+                
                 selected_doctors.append(doctor_info)
-                print(f"   ✅ Dr. {doctor_info['name']} - {len(available_slots)} available slots")
+                print(f"   ✅ Dr. {doctor_info['name']} - {available_slot_count} available slots")
         
         # Update state
         state['recommended_doctors'] = filtered_doctors

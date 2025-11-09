@@ -275,11 +275,12 @@ class CaseTriageAgent(ProgressAwareAgent):
         state['workflow_log'].append(f"Case classified as: {classification}")
         state['messages'].append(AIMessage(content=f"Case triaged as {classification}: {reasoning}"))
         
-        # Determine next action based on classification
-        if classification in ["CRITICAL", "PRIORITY", "ROUTINE"]:
+        # Determine next action based on classification - ONLY CRITICAL cases get appointments
+        if classification == "CRITICAL":
             state['next_action'] = "doctor_matching"
             state['current_agent'] = "doctor_matcher"
         else:
+            # All non-critical cases get health recommendations instead of appointments
             state['next_action'] = "health_recommendations"
             state['current_agent'] = "health_advisor"
         
@@ -369,6 +370,12 @@ class AppointmentCoordinatorAgent(ProgressAwareAgent):
         for i, doctor in enumerate(state['selected_doctors']):
             await self.update_progress(session_id, "running", f"Contacting Dr. {doctor['name']} ({i+1}/{len(state['selected_doctors'])})")
             
+            # Generate personalized email content
+            email_content = self._generate_appointment_email(
+                doctor, state['patient_info'], state['symptoms'], 
+                state['ml_results'], state['case_classification']
+            )
+            
             # Create appointment request
             request = {
                 "request_id": str(uuid.uuid4())[:8],
@@ -378,10 +385,13 @@ class AppointmentCoordinatorAgent(ProgressAwareAgent):
                 "patient_id": state['patient_info'].get('patient_id', 'unknown'),
                 "urgency_level": state['case_classification'],
                 "preferred_slots": doctor.get('available_slots', [])[:3],
-                "email_content": f"Appointment request for {state['case_classification']} case",
+                "email_content": email_content,
                 "status": "sent",
                 "sent_at": datetime.now().isoformat()
             }
+            
+            # Send actual email
+            email_sent = await self._send_appointment_request(request, session_id)
             
             appointment_requests.append(request)
             
@@ -391,7 +401,7 @@ class AppointmentCoordinatorAgent(ProgressAwareAgent):
                 state['patient_info'].get('patient_id', 'unknown')
             )
             
-            # Simulate brief delay
+            # Brief delay for realistic timing
             await asyncio.sleep(0.5)
         
         # Update state
@@ -408,6 +418,129 @@ class AppointmentCoordinatorAgent(ProgressAwareAgent):
         })
         
         return state
+
+    def _generate_appointment_email(self, doctor: Dict, patient_info: Dict, 
+                                  symptoms: str, ml_results: Dict, urgency: str) -> str:
+        """Generate personalized appointment request email"""
+        
+        # Create a professional email template
+        subject = f"🏥 JarvisMD Appointment Request - {urgency} Case"
+        
+        # Get key ML findings (those with confidence > 0.5)
+        key_findings = [k for k, v in ml_results.items() if v > 0.5]
+        findings_str = ", ".join(key_findings) if key_findings else "Pending analysis"
+        
+        # Format appointment slots
+        slots_info = []
+        preferred_slots = doctor.get('available_slots', doctor.get('available_dates', []))[:3]
+        for slot in preferred_slots:
+            date_str = slot.get('date', 'TBD')
+            time_str = slot.get('time', 'TBD')
+            slots_info.append(f"• {date_str} at {time_str}")
+        
+        slots_text = "\n".join(slots_info) if slots_info else "• Please suggest available times"
+        
+        body = f"""Subject: {subject}
+
+Dear Dr. {doctor['name']},
+
+I hope this message finds you well. We have an urgent medical case that requires your expertise in {doctor['specialty']}.
+
+PATIENT INFORMATION:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Patient: {patient_info.get('name', 'Patient')} 
+• Age: {patient_info.get('age', 'Not specified')}
+• Case Priority: {urgency}
+• Primary Symptoms: {symptoms}
+• Key ML Findings: {findings_str}
+
+REQUESTED APPOINTMENT SLOTS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+{slots_text}
+
+This case has been classified as {urgency} based on our AI-powered medical assessment. Your expertise in {doctor['specialty']} makes you an ideal specialist for this consultation.
+
+Please confirm your availability for any of the suggested time slots, or propose alternative times that work better for your schedule.
+
+CONTACT INFORMATION:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Patient Contact: {patient_info.get('phone', 'Available upon request')}
+• JarvisMD Coordination: automated-system@jarvismd.com
+• Request ID: {uuid.uuid4().hex[:8].upper()}
+
+Thank you for your dedication to patient care. We look forward to your prompt response.
+
+Best regards,
+JarvisMD Healthcare Coordination System
+Automated Medical Scheduling Platform
+
+---
+This is an automated message from JarvisMD's AI-powered healthcare coordination system.
+For technical issues, please contact: support@jarvismd.com
+"""
+        return body
+    
+    async def _send_appointment_request(self, request: Dict, session_id: str) -> bool:
+        """Send appointment request email using SMTP"""
+        try:
+            import smtplib
+            import os
+            from email.mime.text import MIMEText
+            from email.mime.multipart import MIMEMultipart
+            
+            await self.update_progress(session_id, "running", f"📤 Sending email to Dr. {request['doctor_name']}")
+            
+            # Email configuration
+            smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com")
+            smtp_port = int(os.getenv("SMTP_PORT", "587"))
+            smtp_username = os.getenv("SMTP_USERNAME", "jarvismd@example.com")
+            smtp_password = os.getenv("SMTP_PASSWORD", "your-app-password")
+            
+            # For testing: Send all emails to your Gmail address
+            test_email = "sahil2023saxena@gmail.com"  # Your email for testing
+            
+            # Create message
+            msg = MIMEMultipart()
+            msg['From'] = smtp_username
+            msg['To'] = test_email  # Send to your email instead of doctor's
+            msg['Subject'] = f"🏥 JarvisMD Appointment Request - {request['urgency_level']} Case"
+            
+            # Email body
+            body = request['email_content']
+            msg.attach(MIMEText(body, 'plain'))
+            
+            try:
+                # Attempt to send real email
+                server = smtplib.SMTP(smtp_server, smtp_port)
+                server.starttls()
+                server.login(smtp_username, smtp_password)
+                
+                text = msg.as_string()
+                server.sendmail(smtp_username, test_email, text)
+                server.quit()
+                
+                await self.update_progress(session_id, "running", f"✅ Email sent successfully to {test_email}")
+                return True
+                
+            except Exception as smtp_error:
+                await self.update_progress(session_id, "running", f"📧 Email simulation mode (SMTP unavailable)")
+                
+                # Fallback to detailed simulation logging
+                await self.update_progress(session_id, "running", f"📤 SIMULATED EMAIL SEND:")
+                await self.update_progress(session_id, "running", f"   To: {test_email}")
+                await self.update_progress(session_id, "running", f"   Subject: Appointment Request - {request['urgency_level']} Case")
+                await self.update_progress(session_id, "running", f"   Doctor: Dr. {request['doctor_name']}")
+                await self.update_progress(session_id, "running", f"   Request ID: {request['request_id']}")
+                
+                # Log email content for verification
+                preview = body[:200] + "..." if len(body) > 200 else body
+                await self.update_progress(session_id, "running", f"   Preview: {preview}")
+                
+                return True
+                
+        except Exception as e:
+            await self.update_progress(session_id, "running", f"❌ Email error: {str(e)}")
+            return False
 
 class DoctorResponseSimulatorAgent(ProgressAwareAgent):
     """Agent that simulates doctor responses for testing"""
@@ -576,38 +709,143 @@ class HealthAdvisorAgent(ProgressAwareAgent):
         self.llm = get_llm()
         
     async def __call__(self, state: AgentState) -> AgentState:
-        """Generate health recommendations for low-risk cases"""
+        """Generate personalized health recommendations using AI"""
         
         session_id = state.get('session_id', 'unknown')
-        await self.update_progress(session_id, "running", "Generating personalized health recommendations...")
+        classification = state.get('case_classification', 'ROUTINE')
         
-        # Simulate AI processing time
-        await asyncio.sleep(2)
+        if classification == "PRIORITY":
+            await self.update_progress(session_id, "running", "PRIORITY case - Generating specialist consultation recommendations...")
+        elif classification == "ROUTINE":
+            await self.update_progress(session_id, "running", "ROUTINE case - Generating preventive care recommendations...")
+        else:
+            await self.update_progress(session_id, "running", "LOW_RISK case - Generating lifestyle recommendations...")
         
-        # Generate health recommendations (simplified for demo)
-        health_recommendations = {
-            "lifestyle_recommendations": {
-                "diet": ["Maintain a balanced diet with plenty of fruits and vegetables",
-                       "Stay hydrated with adequate water intake"],
-                "exercise": ["Engage in regular moderate exercise (30 min, 5 days/week)",
-                           "Include both cardio and strength training"],
-                "sleep": ["Aim for 7-9 hours of quality sleep per night",
-                        "Maintain consistent sleep schedule"]
-            },
-            "preventive_measures": ["Regular health check-ups", "Stay up to date with vaccinations"],
-            "warning_signs": ["Persistent or worsening symptoms", "New concerning symptoms"],
-            "follow_up_timeline": "Monitor symptoms for 1-2 weeks",
-            "resources": ["NHS health information", "Local health centers"],
-            "summary": "Focus on healthy lifestyle habits and monitor symptoms"
+        # Generate AI-powered health recommendations
+        health_prompt = f"""
+        You are a preventive health advisor providing personalized recommendations.
+        
+        Patient Information:
+        - Age: {state['patient_info'].get('age', 'Unknown')}
+        - Symptoms: {state['symptoms']}
+        - Case Classification: {classification}
+        - Urgency Score: {state['urgency_score']}/10
+        
+        ML Analysis Results:
+        {json.dumps(state['ml_results'], indent=2)}
+        
+        Based on this {classification} case, provide:
+        
+        {"For PRIORITY cases: When to seek immediate medical attention, specialist referral recommendations, and monitoring guidelines." if classification == "PRIORITY" else ""}
+        {"For ROUTINE cases: General wellness recommendations, preventive measures, and follow-up timeline." if classification == "ROUTINE" else ""}
+        {"For LOW_RISK cases: Lifestyle modifications, self-care measures, and wellness tips." if classification == "LOW_RISK" else ""}
+        
+        Format as JSON:
+        {{
+            "classification_message": "Clear explanation of why this is a {classification} case",
+            "immediate_actions": ["action1", "action2"],
+            "lifestyle_recommendations": {{
+                "diet": ["specific dietary advice"],
+                "exercise": ["specific exercise recommendations"],  
+                "sleep": ["sleep hygiene recommendations"]
+            }},
+            "monitoring_guidelines": ["what symptoms to monitor"],
+            "when_to_seek_help": ["red flag symptoms requiring immediate attention"],
+            "follow_up_timeline": "specific timeline for follow-up",
+            "educational_resources": ["relevant health information sources"],
+            "summary": "Concise summary of key recommendations"
+        }}
+        
+        Keep recommendations evidence-based, age-appropriate, and specific to the symptoms presented.
+        Do NOT provide specific medical diagnoses. Focus on preventive care and wellness.
+        """
+        
+        try:
+            # Simulate AI processing time
+            await asyncio.sleep(2)
+            
+            await self.update_progress(session_id, "running", "Consulting AI health advisor...")
+            
+            response = self.llm.invoke([HumanMessage(content=health_prompt)])
+            health_recommendations = json.loads(response.content)
+            
+            await self.update_progress(session_id, "running", "AI recommendations generated successfully!")
+            
+        except Exception as e:
+            await self.update_progress(session_id, "running", f"AI generation failed, using fallback recommendations...")
+            
+            # Fallback recommendations based on classification
+            if classification == "PRIORITY":
+                health_recommendations = {
+                    "classification_message": f"This is a PRIORITY case (urgency {state['urgency_score']}/10) requiring specialist consultation within 24-48 hours.",
+                    "immediate_actions": ["Contact your GP within 24 hours", "Monitor symptoms closely", "Keep a symptom diary"],
+                    "lifestyle_recommendations": {
+                        "diet": ["Maintain current diet, avoid any known triggers", "Stay well hydrated"],
+                        "exercise": ["Light activity only until medical consultation", "Avoid strenuous exercise"],
+                        "sleep": ["Ensure adequate rest", "Sleep with head elevated if respiratory symptoms"]
+                    },
+                    "monitoring_guidelines": ["Watch for worsening symptoms", "Monitor vital signs if possible", "Note any new symptoms"],
+                    "when_to_seek_help": ["If symptoms worsen significantly", "New chest pain or breathing difficulties", "Persistent high fever"],
+                    "follow_up_timeline": "Specialist consultation recommended within 24-48 hours",
+                    "educational_resources": ["NHS 111 for urgent advice", "Local GP practice", "Hospital emergency services if critical"],
+                    "summary": "Monitor closely and seek specialist medical attention within 1-2 days due to concerning findings."
+                }
+            elif classification == "ROUTINE":
+                health_recommendations = {
+                    "classification_message": f"This is a ROUTINE case (urgency {state['urgency_score']}/10) requiring standard follow-up care.",
+                    "immediate_actions": ["Schedule routine GP appointment", "Continue current medications", "Monitor symptoms"],
+                    "lifestyle_recommendations": {
+                        "diet": ["Balanced diet rich in fruits and vegetables", "Limit processed foods and excess salt"],
+                        "exercise": ["Regular moderate exercise 150 min/week", "Include both cardio and strength training"],
+                        "sleep": ["7-9 hours of quality sleep nightly", "Consistent sleep schedule"]
+                    },
+                    "monitoring_guidelines": ["Track symptoms weekly", "Note any changes or patterns"],
+                    "when_to_seek_help": ["If symptoms persist beyond 2 weeks", "Any sudden worsening", "New concerning symptoms"],
+                    "follow_up_timeline": "Routine GP appointment within 2-4 weeks",
+                    "educational_resources": ["NHS health information", "Patient.info", "Local health centers"],
+                    "summary": "Maintain healthy lifestyle and schedule routine follow-up with your GP."
+                }
+            else:  # LOW_RISK
+                health_recommendations = {
+                    "classification_message": f"This is a LOW_RISK case (urgency {state['urgency_score']}/10) with minimal concern. Focus on wellness and prevention.",
+                    "immediate_actions": ["No immediate medical action needed", "Continue healthy lifestyle habits", "Self-monitor symptoms"],
+                    "lifestyle_recommendations": {
+                        "diet": ["Mediterranean-style diet with plenty of fruits and vegetables", "Stay well hydrated with water"],
+                        "exercise": ["Regular physical activity - aim for 30 minutes daily", "Mix of cardio, strength, and flexibility exercises"],
+                        "sleep": ["Prioritize 7-9 hours of quality sleep", "Create a relaxing bedtime routine"]
+                    },
+                    "monitoring_guidelines": ["Self-monitor symptoms as needed", "General wellness check-ins"],
+                    "when_to_seek_help": ["Only if symptoms worsen significantly", "Development of new concerning symptoms"],
+                    "follow_up_timeline": "Routine health screening as per age guidelines",
+                    "educational_resources": ["NHS Choices", "Wellness apps", "Local fitness and nutrition resources"],
+                    "summary": "Focus on maintaining healthy lifestyle habits. No immediate medical intervention required."
+                }
+        
+        # Add case-specific information
+        health_recommendations['case_details'] = {
+            "classification": classification,
+            "urgency_score": state['urgency_score'],
+            "primary_concerns": [k for k, v in state['ml_results'].items() if v > 0.3],
+            "patient_age": state['patient_info'].get('age', 'Unknown')
         }
         
         state['health_recommendations'] = health_recommendations
-        state['workflow_log'].append("Health recommendations generated")
-        state['messages'].append(AIMessage(content="Health recommendations provided"))
+        state['workflow_log'].append(f"Health recommendations generated for {classification} case")
+        state['messages'].append(AIMessage(content=f"Personalized health recommendations provided for {classification} case"))
         state['next_action'] = "complete"
         
-        await self.update_progress(session_id, "completed", "Health recommendations generated successfully", {
-            "recommendations": health_recommendations
+        # Different completion messages based on classification
+        if classification == "PRIORITY":
+            completion_msg = "PRIORITY case: Specialist consultation recommended within 24-48 hours"
+        elif classification == "ROUTINE": 
+            completion_msg = "ROUTINE case: Schedule follow-up with your GP within 2-4 weeks"
+        else:
+            completion_msg = "LOW_RISK case: Focus on healthy lifestyle, no immediate medical intervention needed"
+        
+        await self.update_progress(session_id, "completed", completion_msg, {
+            "recommendations": health_recommendations,
+            "classification": classification,
+            "next_steps": health_recommendations.get('immediate_actions', [])
         })
         
         return state

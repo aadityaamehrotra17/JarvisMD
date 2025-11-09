@@ -15,7 +15,8 @@ const WorkflowProgress = ({ sessionId, isVisible, onClose }) => {
       { id: 'doctor_matching', name: 'Doctor Matching', status: 'pending', agent: 'DoctorMatchingAgent' },
       { id: 'appointment_coordination', name: 'Appointment Coordination', status: 'pending', agent: 'AppointmentCoordinatorAgent' },
       { id: 'doctor_simulation', name: 'Doctor Response Simulation', status: 'pending', agent: 'DoctorResponseSimulatorAgent' },
-      { id: 'calendar_integration', name: 'Calendar Integration', status: 'pending', agent: 'CalendarIntegrationAgent' }
+      { id: 'calendar_integration', name: 'Calendar Integration', status: 'pending', agent: 'CalendarIntegrationAgent' },
+      { id: 'health_recommendations', name: 'Health Recommendations', status: 'pending', agent: 'HealthAdvisorAgent' }
     ]
   });
 
@@ -156,7 +157,8 @@ const WorkflowProgress = ({ sessionId, isVisible, onClose }) => {
       doctor_matching: 'Finding suitable specialists based on findings',
       appointment_coordination: 'Sending requests to available doctors',
       doctor_simulation: 'Processing doctor responses and confirmations',
-      calendar_integration: 'Creating calendar events and finalizing appointments'
+      calendar_integration: 'Creating calendar events and finalizing appointments',
+      health_recommendations: 'Generating personalized health recommendations'
     };
     return descriptions[step.id] || step.name;
   };

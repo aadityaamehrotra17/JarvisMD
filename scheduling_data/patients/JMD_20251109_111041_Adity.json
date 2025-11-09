@@ -1,0 +1,13 @@
+{
+  "patient_id": "JMD_20251109_111041_Adity",
+  "appointment_requests": [
+    "6383f48f",
+    "1ea349e0",
+    "e9b1213d"
+  ],
+  "confirmed_appointments": [
+    "APPT_20251109_111049"
+  ],
+  "created_at": "2025-11-09T11:10:46.849008",
+  "updated_at": "2025-11-09T11:10:52.762134"
+}

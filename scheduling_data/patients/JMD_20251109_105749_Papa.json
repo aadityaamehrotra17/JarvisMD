@@ -1,0 +1,13 @@
+{
+  "patient_id": "JMD_20251109_105749_Papa",
+  "appointment_requests": [
+    "1add143a",
+    "1495e41b",
+    "760d62ee"
+  ],
+  "confirmed_appointments": [
+    "APPT_20251109_105752"
+  ],
+  "created_at": "2025-11-09T10:57:50.245659",
+  "updated_at": "2025-11-09T10:57:55.763534"
+}
